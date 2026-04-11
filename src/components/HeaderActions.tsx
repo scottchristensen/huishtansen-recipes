@@ -22,7 +22,7 @@ export default function HeaderActions() {
     <div className="flex items-center gap-2">
       <a
         href="/meal-plan"
-        className="text-amber-100 hover:text-white text-sm font-medium px-2 py-2 transition-colors hidden sm:inline"
+        className="text-amber-100 hover:text-white text-sm font-medium px-2 py-2 transition-colors inline"
         title="Meal Plan"
       >
         <svg
@@ -41,7 +41,7 @@ export default function HeaderActions() {
       </a>
       <a
         href="/import"
-        className="text-amber-100 hover:text-white text-sm font-medium px-2 py-2 transition-colors hidden sm:inline"
+        className="text-amber-100 hover:text-white text-sm font-medium px-2 py-2 transition-colors inline"
         title="Import from URL"
       >
         <svg

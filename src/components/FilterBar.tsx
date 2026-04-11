@@ -1,6 +1,7 @@
 "use client";
 
 import { FilterState } from "@/lib/types";
+import ChefAvatar from "./ChefAvatar";
 
 interface FilterBarProps {
   filters: FilterState;
@@ -8,15 +9,6 @@ interface FilterBarProps {
   chefs: string[];
   types: string[];
 }
-
-const chefEmojis: Record<string, string> = {
-  Olivia: "👩‍🍳",
-  Darcey: "👩",
-  Annika: "🧑‍🍳",
-  Emma: "👧",
-  Isabel: "👶",
-  Scott: "👨‍🍳",
-};
 
 export default function FilterBar({
   filters,
@@ -72,13 +64,14 @@ export default function FilterBar({
           <button
             key={chef}
             onClick={() => update("chef", filters.chef === chef ? "" : chef)}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
               filters.chef === chef
                 ? "bg-amber-500 text-white"
                 : "bg-white border border-amber-200 text-stone-600 hover:bg-amber-50"
             }`}
           >
-            {chefEmojis[chef] || "🍴"} {chef}
+            <ChefAvatar name={chef} size="sm" linked={false} />
+            {chef}
           </button>
         ))}
       </div>

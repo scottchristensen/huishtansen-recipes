@@ -2,13 +2,6 @@
 
 import { supabase } from "./supabase";
 
-export interface MealPlanEntry {
-  id: string;
-  day: string;
-  recipe_id: string;
-  sort_order: number;
-}
-
 export interface MealPlanDay {
   day: string;
   recipeIds: string[];
@@ -26,14 +19,28 @@ const DAYS = [
   "Sunday",
 ];
 
+const CURRENT_USER_KEY = "huish-current-user";
+
+export function getCurrentUser(): string {
+  if (typeof window === "undefined") return "";
+  return localStorage.getItem(CURRENT_USER_KEY) || "";
+}
+
+export function setCurrentUser(name: string): void {
+  localStorage.setItem(CURRENT_USER_KEY, name);
+}
+
 export function getEmptyMealPlan(): MealPlan {
   return DAYS.map((day) => ({ day, recipeIds: [] }));
 }
 
-export async function getMealPlan(): Promise<MealPlan> {
+export async function getMealPlan(planner: string): Promise<MealPlan> {
+  if (!planner) return getEmptyMealPlan();
+
   const { data, error } = await supabase
     .from("meal_plans")
     .select("*")
+    .eq("planner", planner)
     .order("sort_order");
 
   if (error || !data) return getEmptyMealPlan();
@@ -48,34 +55,62 @@ export async function getMealPlan(): Promise<MealPlan> {
   return plan;
 }
 
+export async function getAllMealPlans(): Promise<
+  { planner: string; plan: MealPlan }[]
+> {
+  const { data, error } = await supabase
+    .from("meal_plans")
+    .select("*")
+    .order("sort_order");
+
+  if (error || !data || data.length === 0) return [];
+
+  const planners = [...new Set(data.map((d) => d.planner).filter(Boolean))];
+
+  return planners.map((planner) => {
+    const plan = getEmptyMealPlan();
+    for (const entry of data.filter((d) => d.planner === planner)) {
+      const dayPlan = plan.find((d) => d.day === entry.day);
+      if (dayPlan) {
+        dayPlan.recipeIds.push(entry.recipe_id);
+      }
+    }
+    return { planner, plan };
+  });
+}
+
 export async function addToMealPlan(
   day: string,
-  recipeId: string
+  recipeId: string,
+  planner: string
 ): Promise<void> {
   const { data: existing } = await supabase
     .from("meal_plans")
     .select("sort_order")
     .eq("day", day)
+    .eq("planner", planner)
     .order("sort_order", { ascending: false })
     .limit(1);
 
-  const nextOrder = existing && existing.length > 0 ? existing[0].sort_order + 1 : 0;
+  const nextOrder =
+    existing && existing.length > 0 ? existing[0].sort_order + 1 : 0;
 
   await supabase
     .from("meal_plans")
-    .insert({ day, recipe_id: recipeId, sort_order: nextOrder });
+    .insert({ day, recipe_id: recipeId, sort_order: nextOrder, planner });
 }
 
 export async function removeFromMealPlan(
   day: string,
-  recipeId: string
+  recipeId: string,
+  planner: string
 ): Promise<void> {
-  // Remove first occurrence
   const { data } = await supabase
     .from("meal_plans")
     .select("id")
     .eq("day", day)
     .eq("recipe_id", recipeId)
+    .eq("planner", planner)
     .limit(1);
 
   if (data && data.length > 0) {
@@ -83,8 +118,8 @@ export async function removeFromMealPlan(
   }
 }
 
-export async function clearMealPlan(): Promise<void> {
-  await supabase.from("meal_plans").delete().gte("id", "00000000-0000-0000-0000-000000000000");
+export async function clearMealPlan(planner: string): Promise<void> {
+  await supabase.from("meal_plans").delete().eq("planner", planner);
 }
 
 export interface GroceryItem {
