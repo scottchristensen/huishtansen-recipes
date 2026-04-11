@@ -1,0 +1,509 @@
+import { Recipe } from "./types";
+
+function generateTags(recipe: Omit<Recipe, "id" | "tags" | "status">): string[] {
+  const tags: string[] = [];
+
+  // Tag by type
+  if (recipe.type) tags.push(recipe.type.toLowerCase());
+
+  // Tag by time
+  const timeMatch = recipe.time.match(/(\d+)/);
+  if (timeMatch) {
+    const mins = parseInt(timeMatch[1]);
+    if (mins <= 30) tags.push("quick");
+    if (mins >= 120) tags.push("make-ahead");
+  }
+
+  // Tag by common ingredients
+  const ingredientsLower = recipe.ingredients.toLowerCase();
+  const proteins = ["chicken", "salmon", "beef", "shrimp", "steak", "prosciutto"];
+  for (const protein of proteins) {
+    if (ingredientsLower.includes(protein)) tags.push(protein);
+  }
+
+  // Tag by dietary hints
+  if (!proteins.some((p) => ingredientsLower.includes(p))) {
+    if (
+      ingredientsLower.includes("chickpea") ||
+      ingredientsLower.includes("tofu") ||
+      !ingredientsLower.match(/chicken|beef|salmon|shrimp|steak|pork/)
+    ) {
+      tags.push("vegetarian");
+    }
+  }
+
+  return [...new Set(tags)];
+}
+
+export const seedRecipes: Recipe[] = [
+  {
+    id: "1",
+    name: "Polenta Enchilada Bowls",
+    type: "Main Course",
+    chef: "Olivia",
+    difficulty: "Medium",
+    time: "60 min",
+    servings: "6",
+    photo: "https://drive.google.com/open?id=1nnswl103Y2lEeUg8algRUJBK9THPa_tp",
+    instructions:
+      "In Doc — see link for full instructions. Season chicken with chili powder, smoked paprika, cumin, salt, pepper, cayenne, garlic powder, and onion powder. Cook with enchilada sauce, sliced onion, and peppers. Prepare polenta with broth, milk, cheddar, and butter. Serve bowls with chicken, polenta, black beans, avocado, queso fresco, cilantro, and tortilla chips.",
+    ingredients:
+      "Chicken: 1½ lbs chicken breast, 2 cups red enchilada sauce, 2 tbsp chili powder, 2 tsp smoked paprika, 1 tsp cumin, 1 tsp kosher salt, 1 tsp pepper, ½ tsp cayenne, ¼ tsp garlic powder, ¼ tsp onion powder, 1 onion sliced, 1 red pepper sliced, 1 orange pepper sliced, 1½ cups cooked black beans. Polenta: 2 cups chicken broth, 2 cups milk, 1 cup polenta, 4 oz sharp white cheddar, ¼ tsp salt, ¼ tsp pepper, 2-4 tbsp butter. Toppings: 1 avocado, 4 oz queso fresco, fresh cilantro, tortilla chips and salsa.",
+    link: "https://docs.google.com/document/d/1KIlOOjimNg6CpOeK3pWOIVmnkSvWkdJEptT4nNKXEGQ/edit",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "2",
+    name: "Homemade Biscuits",
+    type: "Baked Good",
+    chef: "Olivia",
+    difficulty: "Easy",
+    time: "30 min",
+    servings: "6",
+    photo: "https://www.momontimeout.com/wp-content/uploads/2012/05/best-biscuit-recipe-733x524.jpg",
+    instructions:
+      "In Doc — see link for full instructions. Mix dry ingredients, cut in cold butter, add milk, fold and cut biscuits, bake.",
+    ingredients:
+      "2 cups all-purpose flour, 1 tbsp baking powder, 1 tbsp granulated sugar, 1 tsp salt, 6 tbsp unsalted butter (very cold, European butter ideal), ¾ cup whole milk.",
+    link: "https://docs.google.com/document/d/1OrE5F_JUBmCgTChFm8TuByk-3QRG4eA-kcJt4dFj_Fs/edit",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "3",
+    name: "Peach Prosciutto Italian Salad",
+    type: "Salad",
+    chef: "Olivia",
+    difficulty: "Easy",
+    time: "10 min",
+    servings: "2",
+    photo: "https://images.ctfassets.net/lufu0clouua1/1P6kZPddScSYamWsaUk2ym/98ec68011b250ed66c1877938c025419/Grilled-Peach-and-Burrata-Salad.jpg",
+    instructions:
+      "Rip burrata and prosciutto, cut tomatoes or peaches and toss everything together. Voila!",
+    ingredients:
+      "Dressing: drizzle of olive oil, drizzle of balsamic, salt and pepper. Salad: 2 big handfuls arugula, ½ cup cherry tomatoes (halved) or peaches if in season, 1 ball burrata cheese (ripped), 5 basil leaves (chopped), 4-6 pieces prosciutto (ripped).",
+    link: "https://docs.google.com/document/d/1xmlp0Ki8AunDxLsPkGWSp-5LTf9Q4Qphp1uWjmNQFzU/edit",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "4",
+    name: "Pearl Couscous Summer Salad",
+    type: "Salad",
+    chef: "Olivia",
+    difficulty: "Easy",
+    time: "30 min",
+    servings: "6",
+    photo: "https://nitrocdn.com/QpRITogWwpubMNxcBLCqtUiSkQNrcUhi/assets/static/optimized/rev-d940ecb/wp-content/uploads/2019/05/summer-couscous-salad-5.jpg",
+    instructions: "Cook couscous and toss with dressing and fresh ingredients.",
+    ingredients:
+      "Dressing: 3 tbsp olive oil, 3 tbsp white wine vinegar, 1 tbsp honey (or maple syrup), ¼ tsp dijon, 1 tsp lemon juice, zest of 1 lemon, salt & pepper. Salad: 1 cup couscous (uncooked), 1 large bell pepper (chopped), 1½ cups cherry tomatoes (halved), 1 english cucumber (chopped), ¼ red onion (finely chopped), ½ cup fresh mint (chopped), ½ cup feta cheese (crumbled), 1 mango (cubed).",
+    link: "https://docs.google.com/document/d/1lHDZELePBXi2JY4AW9gAoz8ucPx40CWkObRAYJJCEK4/edit",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "5",
+    name: "Kale Salad (Liv's Version)",
+    type: "Salad",
+    chef: "Olivia",
+    difficulty: "Medium",
+    time: "20 min",
+    servings: "4",
+    photo: "https://www.zupans.com/app/uploads/2016/10/Cranberry-Almond-Kale-Salad.jpg",
+    instructions: "Chop kale, make dressing, and toss everything together.",
+    ingredients:
+      "Dressing: ¼ cup olive oil, ⅓ cup lemon juice, 2 tsp sugar or honey, 2 tsp garlic paste. Salad: 1 big bunch kale (stripped and chopped), ½ cup grated parm, ½ red onion (thinly sliced), 1 pear/apple (thinly sliced or diced), ½ cup cranberries or chopped dates, ½ cup candied almonds, ¼ cup hemp seeds.",
+    link: "https://docs.google.com/document/d/1GgCpWX2ar601s1ksJb3RtK8bTRdB7uhqZpEaD9oKJCU/edit",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "6",
+    name: "Salmon with Mango Salsa",
+    type: "Main Course",
+    chef: "Olivia",
+    difficulty: "Medium",
+    time: "30 min",
+    servings: "4",
+    photo: "https://pinchofyum.com/wp-content/uploads/BBQ-Salmon-Bowl.jpg",
+    instructions: "Season salmon, cook in air fryer or oven, prepare fresh mango salsa, serve together.",
+    ingredients:
+      "Salmon: 2 lbs fresh salmon, 2 tbsp brown sugar, 2 tsp smoked paprika, 2 tsp onion powder, 1 tsp garlic powder, ½ tsp chili powder, ½ tsp kosher salt, 2 tbsp olive oil. Salsa: 2 mangoes (diced), 1 avocado (diced), ¼ cup cilantro (minced), ¼ cup red onion (minced), jalapeño (optional), drizzle of honey, squeeze of lime juice + zest, salt to taste.",
+    link: "https://docs.google.com/document/d/1BnmgXUcbmTkcBR77YT60F5gK97p-m2GH8ajzOO4KU3k/edit",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "7",
+    name: "Blueberry-Lemon Galette",
+    type: "Breakfast",
+    chef: "Olivia",
+    difficulty: "Medium",
+    time: "30 min",
+    servings: "6",
+    photo: "https://s3.amazonaws.com/finecooking.s3.tauntonclud.com/app/uploads/2017/04/18172354/fc73ch054-01-main.jpg",
+    instructions: "Make the dough, fill with the fruit mix. See link for full instructions.",
+    ingredients: "See link for full ingredient list.",
+    link: "https://docs.google.com/document/d/1jfR0dBMhkDmHTtXK2GcVwu5cp1pqCryIwbKjvrMzOlg/edit",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "8",
+    name: "Lemon Ricotta Pasta",
+    type: "Main Course",
+    chef: "Olivia",
+    difficulty: "Easy",
+    time: "30 min",
+    servings: "4",
+    photo: "https://nitrocdn.com/eSLhakvQipAhEWtksvxrnpAZbKWwysTe/assets/static/optimized/rev-6b98c20/wp-content/uploads/2018/04/lemon-ricotta-pasta-3.jpg",
+    instructions: "See link for full instructions.",
+    ingredients: "See link for full ingredient list.",
+    link: "https://docs.google.com/document/d/1hsWhLgjQk8N51k6Yb9TStxf-hmHSU0kRdH5mKD37TjU/edit",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "9",
+    name: "Buddha Bowls",
+    type: "Main Course",
+    chef: "Olivia",
+    difficulty: "Medium",
+    time: "40 min",
+    servings: "1-3",
+    photo: "https://minimalistbaker.com/wp-content/uploads/2015/04/30-minute-CHICKPEA-Sweet-Potato-BUDDHA-Bowls-A-complete-meal-packed-with-protein-fiber-and-healthy-fats-with-a-STELLAR-Tahini-Lemon-Maple-Sauce-vegan-glutenfree-healthy.jpg",
+    instructions:
+      "Roast veggies and chickpeas in oven. Cover with tahini dressing.",
+    ingredients:
+      "Veggies: 2 tbsp oil, ½ red onion (wedges), 2 small sweet potatoes (halved), 1 bundle broccolini, 2 handfuls kale, salt + pepper. Chickpeas: 1 can chickpeas, 1 tsp cumin, ¾ tsp chili powder, ¾ tsp garlic powder, salt + pepper, ½ tsp oregano, ¼ tsp turmeric. Tahini Dressing: ¼ cup tahini, 1 tbsp maple syrup, ½ lemon (juiced), 2-4 tbsp hot water.",
+    link: "https://docs.google.com/document/d/1IIoSZnoSZtt8Y_rX9NbbB2jKCyxESjBEqTE-wM_3ewM/edit",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "10",
+    name: "Kitchen Sink Polenta Bowls",
+    type: "Main Course",
+    chef: "Olivia",
+    difficulty: "Medium",
+    time: "60 min",
+    servings: "4",
+    photo: "https://pinchofyum.com/wp-content/uploads/Roasted-Tomatoes-with-Spinach-and-Goat-Cheese-Polenta.jpg",
+    instructions:
+      "Roast and broil cherry tomatoes and other veggies. Fry egg. Cook polenta. Serve with goat cheese!",
+    ingredients:
+      "Cherry tomatoes (tossed in oil and s+p, broiled), cooked polenta, cooked spinach with garlic, goat cheese or parm, fried egg, any other roasted veggies.",
+    link: "https://docs.google.com/document/d/1cM8Keu1z9itn6IYXCbS68s1q39xF8BFt3LHxlG1r1GU/edit",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "11",
+    name: "Couscous-Stuffed Poblano Peppers",
+    type: "Main Course",
+    chef: "Olivia",
+    difficulty: "Medium",
+    time: "40 min",
+    servings: "2",
+    photo: "https://media.blueapron.com/recipes/23644/square_newsletter_images/1583357653-34-0032-0304/0406_2PV3_Couscous-Peppers_040_SQ_Web_hi_res.jpg?quality=80&width=600",
+    instructions:
+      "Roast Poblanos at 450 for 12 min. Cook couscous and raisins in ¾ cup water. Mix tahini, half lemon juice, 2 tbsp water, 1 tbsp olive oil, and garlic paste. Combine tahini sauce with cooked couscous and stuff inside roasted peppers. Roast peppers for another 5-6 min. Mix greek yogurt and ½ lemon juice and put on top with almond slices.",
+    ingredients:
+      "2 Poblano peppers, ½ cup couscous, 1 lemon, 1 handful spinach, 2 tbsp golden raisins, 2 tbsp tahini, 2 tbsp sliced almonds, 1 clove garlic, 1 picked pepper or chopped bell pepper, ½ cup greek yogurt.",
+    link: "https://docs.google.com/document/d/18DlvxjWs-rUtD1wR9pyv3SXWLqrQJYbCXm3Id3nm214/edit",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "12",
+    name: "Spring Roll Bowls",
+    type: "Main Course",
+    chef: "Olivia",
+    difficulty: "Easy",
+    time: "40 min",
+    servings: "4",
+    photo: "https://pinchofyum.com/wp-content/uploads/Spring-Roll-Bowls-1-5.jpg",
+    instructions:
+      "Cook noodles for 3 minutes. Chop veggies and herbs. Cook shrimp (if desired) and mix sauce. Mix all together in a bowl and top with peanuts and avocado.",
+    ingredients:
+      "Sauce: 3 cloves garlic, 2 tbsp rice vinegar, ¼ cup agave or brown sugar, ¼ cup fish sauce, ⅓ cup lime juice, ⅓ cup vegetable oil. Bowls: rice noodles, basil, mint, and cilantro, serrano peppers, chopped peanuts, avocado, veggies (carrots, bell peppers, cucumbers), protein (shrimp or chicken). Note: all the fresh produce can get expensive.",
+    link: "https://docs.google.com/document/d/17vtArYzqyo5iBsQAkLpyxDMCa1z67TK0dk4XfyAhaIE/edit",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "13",
+    name: "Flank Steak Marinade",
+    type: "Main Course",
+    chef: "Darcey",
+    difficulty: "Easy",
+    time: "10 min",
+    servings: "1-3",
+    photo: "",
+    instructions:
+      "Whisk all ingredients together. Pour over flank steak and marinade overnight, up to 2 days ahead. Grill over med-high heat approximately 7 min per side (varies by thickness). Let sit for about 10 min before cutting and serving. Serves 4-6 depending on steak size.",
+    ingredients:
+      "¼ cup apple cider vinegar, ¼ cup canola oil, ½ cup soy sauce, 3 tsp brown sugar, 1 tsp minced garlic, ½ tsp ground ginger.",
+    link: "",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "14",
+    name: "Popeye Pancakes",
+    type: "Breakfast",
+    chef: "Darcey",
+    difficulty: "Easy",
+    time: "30 min",
+    servings: "1-3",
+    photo: "",
+    instructions:
+      "Preheat oven to 425. Put butter in 9x13 pan and place in oven while preheating until butter is melted. Meanwhile, whisk together or put in blender the rest of the ingredients. Pour into pan and bake for 15-20 min until golden brown and puffed up! Serve with berries, bananas, whipping cream, syrup, etc!",
+    ingredients: "¼ cup butter, 1 cup milk, 6 eggs, 1 cup flour, 1 tsp vanilla, ½ tsp salt.",
+    link: "",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "15",
+    name: "Balsamic Salad Dressing",
+    type: "Salad",
+    chef: "Darcey",
+    difficulty: "Easy",
+    time: "10 min",
+    servings: "1-5",
+    photo: "",
+    instructions: "Whisk together all ingredients.",
+    ingredients:
+      "¼ cup balsamic vinegar, ¼ cup olive oil, 2 heaping tsp Dijon mustard, 2 tsp sugar, ½ tsp salt.",
+    link: "",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "16",
+    name: "Mom's Magic Cake",
+    type: "Dessert",
+    chef: "Darcey",
+    difficulty: "Easy",
+    time: "40 min",
+    servings: "1-7",
+    photo: "",
+    instructions:
+      "Preheat oven to 350. Mix all ingredients and pour into two 9\" greased cake pans. Bake for 30-35 min until toothpick comes out clean in center! Let cool for 5 min then turn out onto cooling racks. Frost when cool.",
+    ingredients:
+      "2⅓ cups water, 2 boxes French Vanilla cake mix, 12 oz plain greek yogurt (2 packages), 3 egg whites + 1 yolk, 2 tins frosting (vanilla) or homemade frosting, shredded coconut (optional).",
+    link: "",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "17",
+    name: "Blueberry Cornmeal Butter Cake",
+    type: "Dessert",
+    chef: "Emma",
+    difficulty: "Medium",
+    time: "50 min",
+    servings: "1-7",
+    photo: "",
+    instructions:
+      "Preheat oven to 350. Butter and flour an 8\" square or 9\" circle pan. Whisk flour, cornmeal, baking powder and salt. Beat butter with sugar 2+ min until fluffy. Beat in eggs one at a time, add vanilla and zest. Add flour in thirds alternating with sour cream. Fold blueberries with last third of flour into batter. Make topping: combine dry ingredients, mash in butter. Sprinkle over batter. Bake 32-35 minutes.",
+    ingredients:
+      "Cake: 8 tbsp butter, 1 cup flour, ½ cup cornmeal, 2 tsp baking powder, ½ tsp salt, 1 cup sugar, 2 eggs, ½ tsp vanilla, ¼ tsp lemon zest, ⅓ cup sour cream, 1⅔ cups blueberries. Topping: ½ cup sugar, 4 tbsp flour, 2 tbsp cornmeal, ½ tsp cinnamon, pinch of salt, 2½ tbsp butter.",
+    link: "",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "18",
+    name: "Coconut Vanilla Granola",
+    type: "Breakfast",
+    chef: "Annika",
+    difficulty: "Easy",
+    time: "20 min",
+    servings: "1-23",
+    photo: "https://1.bp.blogspot.com/-lQOKm0k6tro/V3HrV9znb7I/AAAAAAAACOg/3gPyPmvr4bweLYE_ed02iZo2HrzZxtsnACLcB/s1600/IMG_0329-2.JPG",
+    instructions:
+      "Preheat oven to 350. Pulse half the almonds in food processor until finely chopped, coarsely chop other half. Mix with oats, salt, and brown sugar. Microwave honey and coconut oil until liquid, stir in extracts. Combine wet and dry, spread on parchment-lined baking sheet. Bake 5 min, stir, add coconut, bake 5 more min. Cool 10 min and break into pieces.",
+    ingredients:
+      "1 cup almonds (divided), 3 cups oats, ½ tsp salt, ⅓ cup brown sugar, ⅓ cup honey, 3 tbsp coconut oil, ¼ tsp vanilla extract, ¼ tsp almond extract, shredded coconut (optional).",
+    link: "",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "19",
+    name: "Lemon Pudding Chippers",
+    type: "Dessert",
+    chef: "Annika",
+    difficulty: "Easy",
+    time: "40 min",
+    servings: "1-29",
+    photo: "https://4.bp.blogspot.com/-G_GvQ_4TdGE/WRoDjsH6rtI/AAAAAAAAEZg/TbL1-apwErQax_uPw7-GCTYZgDiYlKxMgCLcB/s1600/IMG_2120.JPG",
+    instructions:
+      "Preheat oven to 375. Cream together sugar and butter. Mix in egg and milk. In separate bowl combine sour cream, pudding, salt, soda and lemon juice. Combine mixtures. Add flour, mix till smooth. Mix in white chocolate chips, zest, and food coloring. Roll dough into quarter-sized balls. Bake 5-7 minutes — they should look gooey when you take them out! They'll harden as they cool.",
+    ingredients:
+      "1 cup sugar, ½ cup softened butter, 1 egg, 2 tbsp milk, ⅓ cup sour cream, 1 small box lemon pudding mix, ½ tsp salt, 3 tsp lemon juice, 2 cups flour, 1 bag (12 oz) white chocolate chips, zest from 1 lemon, yellow food coloring (optional).",
+    link: "",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "20",
+    name: "Honey Chicken & Veggie Kabobs",
+    type: "Main Course",
+    chef: "Annika",
+    difficulty: "Medium",
+    time: "120+ min",
+    servings: "1-5",
+    photo: "https://3.bp.blogspot.com/-RiWGvxWsm6s/WPgjG-f_-1I/AAAAAAAAENU/nkITpxgmAa0peJHp_0x_R3BHPoCYrFdmgCLcB/s1600/IMG_2367.JPG",
+    instructions:
+      "Chop chicken and veggies into bite-size pieces. Place chicken in one ziplock and veggies in another. Whisk marinade ingredients. Pour half in each bag. Marinade 2-24 hours, flipping occasionally. Soak skewers 1 hour before grilling. Thread onto skewers. Grill, brushing with remaining veggie marinade. Serve with rice or crusty bread.",
+    ingredients:
+      "Kabobs: chicken breasts, bell peppers, onions, zucchini, pineapple. Marinade: ½ cup canola oil, ⅔ cup honey, ⅔ cup soy sauce, 1 tsp minced garlic, ½ tsp black pepper. Skewers.",
+    link: "",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "21",
+    name: "BBQ Chicken Pizza",
+    type: "Main Course",
+    chef: "Annika",
+    difficulty: "Easy",
+    time: "30 min",
+    servings: "1-3",
+    photo: "",
+    instructions:
+      "Preheat oven to 475. On floured surface, roll out dough and pierce 10 times with fork. Sprinkle cornmeal on baking sheet, place dough on sheet. Cover with BBQ sauce. Load on toppings (minus cilantro!). Bake 10-15 minutes. Sprinkle on cilantro and red pepper flakes.",
+    ingredients:
+      "Pizza dough (Trader Joe's or homemade), shredded chicken, mozzarella cheese, BBQ sauce, sliced red onions, diced bell peppers, cilantro, flour, cornmeal, optional red pepper flakes.",
+    link: "",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "22",
+    name: "Cinnamon Candied Nuts",
+    type: "Appetizers/Snacks",
+    chef: "Annika",
+    difficulty: "Medium",
+    time: "30 min",
+    servings: "1-11",
+    photo: "https://3.bp.blogspot.com/-CivTqqc0Gpw/WAmJT0rGdII/AAAAAAAADKM/AUVPxtu7B-YlDyosLtz1a6h2kzy-65AlwCLcB/s1600/IMG_8668.JPG",
+    instructions:
+      "Spread out wax paper. Combine water, sugar and cinnamon in large saucepan, stir. Bring to a boil. Turn down heat slightly and add vanilla and nuts. Stir constantly for about 10 minutes until all liquid evaporates. Just as nuts are getting coated in thick sugary cover, immediately spread onto wax paper! Let cool and enjoy!",
+    ingredients:
+      "½ cup water, 1 cup white sugar, 1 tbsp cinnamon, 1 tsp vanilla, 2-2.5 cups nuts (pecans, almonds, your choice!).",
+    link: "",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "23",
+    name: "Energy Balls",
+    type: "Appetizers/Snacks",
+    chef: "Annika",
+    difficulty: "Easy",
+    time: "30 min",
+    servings: "1-23",
+    photo: "https://www.gimmesomeoven.com/wp-content/uploads/2012/02/Easy-No-Bake-Energy-Bites-Recipe-1100x1643.jpg",
+    instructions:
+      "Mix all ingredients in a bowl. Roll into small balls, place in tupperware and store in fridge. Great for breakfast, afternoon snack, dessert, or on the go!",
+    ingredients:
+      "1 cup oats, ⅔ cup shredded coconut flakes, ½ cup peanut butter, ⅓ cup honey or agave, ½ cup ground flaxseeds, ½ cup dark chocolate chips or cacao nibs, 1 tbsp chia seeds, 1 tsp vanilla, sprinkle of salt, 1 scoop chocolate protein powder (optional).",
+    link: "",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "24",
+    name: "Banzai Bowls",
+    type: "Breakfast",
+    chef: "Isabel",
+    difficulty: "Easy",
+    time: "20 min",
+    servings: "12-31",
+    photo: "https://assets.simpleviewinc.com/simpleview/image/fetch/q_75/https://assets.simpleviewinc.com/simpleview/image/upload/crm/surfcityusa/Banzai0-f0080ec55056a36_f0080fd8-5056-a36a-08ad1cef2cef3fc9.jpg",
+    instructions:
+      "Blend all acai base ingredients. Pour into large container. Add toppings and enjoy!",
+    ingredients:
+      "Acai: 1 packet acai, ½ cup frozen strawberries, ½ cup frozen mango, ⅔ frozen banana, 4 oz apple juice (or hemp milk). Toppings: granola (preferably Nature's Path Hemp Hearts), shredded coconut, banana slices, strawberry slices, blueberries, kiwi slices, honey.",
+    link: "",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "25",
+    name: "Chocolate Kitchen Sink Cake",
+    type: "Dessert",
+    chef: "Annika",
+    difficulty: "Hard",
+    time: "120+ min",
+    servings: "1-11",
+    photo: "https://cakebycourtney.com/wp-content/uploads/2017/08/Everything-But-The-Kitchen-Sink-Cake-4-1024x768.jpg",
+    instructions: "See link for full instructions.",
+    ingredients:
+      "Dark chocolate cake layers, potato chip and pretzel crack filling, brown sugar frosting and a dark chocolate ganache!",
+    link: "https://cakebycourtney.com/everything-kitchen-sink-cake/",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "26",
+    name: "Oatmeal Chocolate Molasses Cookies",
+    type: "Dessert",
+    chef: "Olivia",
+    difficulty: "Easy",
+    time: "30 min",
+    servings: "24",
+    photo: "",
+    instructions:
+      "I shave the chocolate instead of adding chips and add walnuts if you want! See link for full recipe.",
+    ingredients: "See link for full ingredient list.",
+    link: "https://sallysbakingaddiction.com/oatmeal-chocolate-chip-cookies/",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "27",
+    name: "Best Basic Banana Bread (Bx4)",
+    type: "Dessert",
+    chef: "Annika",
+    difficulty: "Easy",
+    time: "50 min",
+    servings: "12-31",
+    photo: "",
+    instructions:
+      "Preheat oven to 325 and spray loaf pans. Mix together eggs, buttermilk, oil and bananas. Add sugars and vanilla. Stir together flour, cinnamon, baking soda and salt. Add flour mixture to banana mixture, stir till combined. Pour into pans and bake until toothpick is almost clean! 3 small loaf pans = about 30 minutes.",
+    ingredients:
+      "2 eggs, ⅓ cup buttermilk, ½ cup vegetable oil, 3.5 large ripe bananas, 1 cup white sugar, ½ cup brown sugar, 2 tsp vanilla, 1¾ cup flour, 1 tsp baking soda, ½ tsp salt, 1 tsp cinnamon.",
+    link: "",
+    tags: [],
+    status: "family-approved",
+  },
+  {
+    id: "28",
+    name: "Chicken Curry Sweet Potato Slow Cooker",
+    type: "Main Course",
+    chef: "Darcey",
+    difficulty: "Easy",
+    time: "20 min",
+    servings: "1-4",
+    photo: "",
+    instructions:
+      "Pour liquids into crock pot and stir in seasonings including garlic. Chop onion, peel and chop sweet potatoes. Add chicken, place butter on top, add potatoes and onions. Scoop liquid over top. Cover and cook on low 4-6 hours. When done, pour sauce into saucepan, mix remaining coconut milk with 1+ tbsp cornstarch, add to saucepan to thicken. Serve over rice with shredded coconut and chopped cashews.",
+    ingredients:
+      "2-4 chicken breasts, 1 cup orange juice, 1 cup coconut milk, 1 cup chicken broth, 1 large onion, 2-3 large sweet potatoes, 3 tbsp butter, 3-4 garlic cloves, 3 tbsp curry powder, ½ tsp coriander, 1 tsp turmeric, 2 tsp salt, 1 tsp sugar, cornstarch to thicken.",
+    link: "",
+    tags: [],
+    status: "family-approved",
+  },
+];
+
+// Auto-generate tags for all recipes
+seedRecipes.forEach((recipe) => {
+  recipe.tags = generateTags(recipe);
+});
