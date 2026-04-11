@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import HeaderActions from "@/components/HeaderActions";
+import { AuthProvider } from "@/lib/auth-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,20 +46,22 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
       <body className="min-h-full flex flex-col">
-        <header className="bg-amber-500 text-white shadow-md">
-          <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-            <a href="/" className="flex items-center gap-2">
-              <span className="text-2xl">🍳</span>
-              <h1 className="text-xl font-bold tracking-tight">
-                Huish Family Recipes
-              </h1>
-            </a>
-            <HeaderActions />
-          </div>
-        </header>
-        <main className="flex-1 max-w-4xl mx-auto w-full px-4 py-6">
-          {children}
-        </main>
+        <AuthProvider>
+          <header className="bg-amber-500 text-white shadow-md">
+            <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+              <a href="/" className="flex items-center gap-2">
+                <span className="text-2xl">🍳</span>
+                <h1 className="text-xl font-bold tracking-tight">
+                  Huish Family Recipes
+                </h1>
+              </a>
+              <HeaderActions />
+            </div>
+          </header>
+          <main className="flex-1 max-w-4xl mx-auto w-full px-4 py-6">
+            {children}
+          </main>
+        </AuthProvider>
       </body>
     </html>
   );

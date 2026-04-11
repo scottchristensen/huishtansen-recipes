@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getCurrentUser, setCurrentUser } from "@/lib/meal-plan-store";
+import { useAuth } from "@/lib/auth-context";
 
 const FAMILY_MEMBERS = [
   { name: "Olivia", emoji: "👩‍🍳" },
@@ -17,11 +18,20 @@ interface PersonPickerProps {
 }
 
 export default function PersonPicker({ onSelect }: PersonPickerProps) {
+  const { profile } = useAuth();
   const [current, setCurrent] = useState("");
 
   useEffect(() => {
-    setCurrent(getCurrentUser());
-  }, []);
+    const saved = getCurrentUser();
+    if (saved) {
+      setCurrent(saved);
+    } else if (profile?.chef_name) {
+      // Auto-select the signed-in user
+      setCurrentUser(profile.chef_name);
+      setCurrent(profile.chef_name);
+      onSelect(profile.chef_name);
+    }
+  }, [profile, onSelect]);
 
   const handleSelect = (name: string) => {
     setCurrentUser(name);

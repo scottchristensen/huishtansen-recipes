@@ -1,18 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { isAuthenticated, authenticate } from "@/lib/recipes-store";
+import { useState } from "react";
+import { useAuth, createProfile } from "@/lib/auth-context";
+
+const FAMILY_MEMBERS = [
+  { name: "Olivia", emoji: "👩‍🍳" },
+  { name: "Darcey", emoji: "👩" },
+  { name: "Annika", emoji: "🧑‍🍳" },
+  { name: "Emma", emoji: "👧" },
+  { name: "Isabel", emoji: "👶" },
+  { name: "Scott", emoji: "👨‍🍳" },
+];
 
 export default function AuthGate({ children }: { children: React.ReactNode }) {
-  const [authed, setAuthed] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [pin, setPin] = useState("");
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    setAuthed(isAuthenticated());
-    setLoading(false);
-  }, []);
+  const { session, user, profile, loading, signInWithGoogle, setProfile } =
+    useAuth();
+  const [pickingName, setPickingName] = useState(false);
+  const [signingIn, setSigningIn] = useState(false);
 
   if (loading) {
     return (
@@ -22,57 +26,92 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (authed) return <>{children}</>;
+  // Not signed in — show Google sign-in
+  if (!session) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="bg-white rounded-2xl shadow-lg border border-amber-100 p-8 w-full max-w-sm text-center">
+          <div className="text-5xl mb-4">🍳</div>
+          <h2 className="text-xl font-bold text-stone-900 mb-1">
+            Huish Family Recipes
+          </h2>
+          <p className="text-sm text-stone-500 mb-6">
+            Sign in with your Google account to access recipes
+          </p>
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (authenticate(pin)) {
-      setAuthed(true);
-      setError(false);
-    } else {
-      setError(true);
-      setPin("");
-    }
-  };
-
-  return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="bg-white rounded-2xl shadow-lg border border-amber-100 p-8 w-full max-w-sm text-center">
-        <div className="text-5xl mb-4">🍳</div>
-        <h2 className="text-xl font-bold text-stone-900 mb-1">
-          Huish Family Recipes
-        </h2>
-        <p className="text-sm text-stone-500 mb-6">
-          Enter the family PIN to access recipes
-        </p>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="password"
-            value={pin}
-            onChange={(e) => {
-              setPin(e.target.value);
-              setError(false);
-            }}
-            placeholder="Family PIN"
-            autoFocus
-            className={`w-full px-4 py-3 text-center text-lg tracking-widest bg-amber-50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 ${
-              error ? "border-red-300 bg-red-50" : "border-amber-200"
-            }`}
-          />
-          {error && (
-            <p className="text-red-500 text-sm">
-              Hmm, that&apos;s not it. Try again!
-            </p>
-          )}
           <button
-            type="submit"
-            className="w-full bg-amber-500 text-white py-3 rounded-xl font-semibold hover:bg-amber-600 transition-colors"
+            onClick={async () => {
+              setSigningIn(true);
+              await signInWithGoogle();
+            }}
+            disabled={signingIn}
+            className="w-full flex items-center justify-center gap-3 bg-white border border-stone-300 text-stone-700 py-3 px-4 rounded-xl font-semibold hover:bg-stone-50 transition-colors disabled:opacity-50"
           >
-            Enter Kitchen
+            <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+                fill="#4285F4"
+              />
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                fill="#34A853"
+              />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                fill="#FBBC05"
+              />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                fill="#EA4335"
+              />
+            </svg>
+            {signingIn ? "Redirecting..." : "Sign in with Google"}
           </button>
-        </form>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  // Signed in but no profile yet — pick your family name
+  if (!profile || pickingName) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="bg-white rounded-2xl shadow-lg border border-amber-100 p-8 w-full max-w-sm text-center">
+          <div className="text-5xl mb-4">👋</div>
+          <h2 className="text-xl font-bold text-stone-900 mb-1">
+            Welcome, {user?.user_metadata?.full_name?.split(" ")[0] || "Chef"}!
+          </h2>
+          <p className="text-sm text-stone-500 mb-6">
+            Which family member are you?
+          </p>
+
+          <div className="flex flex-wrap justify-center gap-2">
+            {FAMILY_MEMBERS.map((member) => (
+              <button
+                key={member.name}
+                onClick={async () => {
+                  const newProfile = await createProfile(
+                    user!.id,
+                    member.name,
+                    user!.email ?? null,
+                    user!.user_metadata?.avatar_url ?? null
+                  );
+                  if (newProfile) {
+                    setProfile(newProfile);
+                    setPickingName(false);
+                  }
+                }}
+                className="flex items-center gap-2 px-4 py-2.5 bg-amber-50 border border-amber-200 rounded-xl text-sm font-medium text-stone-700 hover:bg-amber-100 hover:border-amber-300 transition-colors"
+              >
+                <span className="text-lg">{member.emoji}</span>
+                {member.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
 }

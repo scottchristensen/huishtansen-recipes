@@ -1,22 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { isAuthenticated, logout } from "@/lib/recipes-store";
+import { useAuth } from "@/lib/auth-context";
 
 export default function HeaderActions() {
-  const [authed, setAuthed] = useState(false);
+  const { session, profile, signOut } = useAuth();
 
-  useEffect(() => {
-    setAuthed(isAuthenticated());
-  }, []);
+  if (!session) return null;
 
-  const handleLogout = () => {
-    logout();
-    setAuthed(false);
-    window.location.reload();
+  const handleLogout = async () => {
+    await signOut();
+    window.location.href = "/";
   };
-
-  if (!authed) return null;
 
   return (
     <div className="flex items-center gap-2">
@@ -64,10 +58,29 @@ export default function HeaderActions() {
       >
         + Add
       </a>
+      {profile && (
+        <a
+          href={`/chef/${profile.chef_name}`}
+          className="text-amber-100 hover:text-white text-sm font-medium px-2 py-2 transition-colors"
+          title={profile.chef_name}
+        >
+          <span className="text-lg">
+            {profile.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt={profile.chef_name}
+                className="w-6 h-6 rounded-full inline"
+              />
+            ) : (
+              "👤"
+            )}
+          </span>
+        </a>
+      )}
       <button
         onClick={handleLogout}
         className="text-amber-100 hover:text-white text-sm font-medium px-2 py-2 transition-colors"
-        title="Log out"
+        title="Sign out"
       >
         <svg
           className="w-5 h-5"

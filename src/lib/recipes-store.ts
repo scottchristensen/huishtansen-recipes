@@ -3,9 +3,6 @@
 import { supabase } from "./supabase";
 import { Recipe } from "./types";
 
-const AUTH_KEY = "huish-auth";
-const FAMILY_PIN = "huish2026";
-
 export async function getRecipes(): Promise<Recipe[]> {
   const { data, error } = await supabase
     .from("recipes")
@@ -149,23 +146,6 @@ export function getUniqueChefs(recipes: Recipe[]): string[] {
 
 export function getUniqueTypes(recipes: Recipe[]): string[] {
   return [...new Set(recipes.map((r) => r.type))].sort();
-}
-
-export function isAuthenticated(): boolean {
-  if (typeof window === "undefined") return false;
-  return localStorage.getItem(AUTH_KEY) === "true";
-}
-
-export function authenticate(pin: string): boolean {
-  if (pin === FAMILY_PIN) {
-    localStorage.setItem(AUTH_KEY, "true");
-    return true;
-  }
-  return false;
-}
-
-export function logout(): void {
-  localStorage.removeItem(AUTH_KEY);
 }
 
 export function parseTimeMinutes(time: string): number | null {

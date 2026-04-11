@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Recipe } from "@/lib/types";
 import { saveRecipe } from "@/lib/recipes-store";
+import { useAuth } from "@/lib/auth-context";
 import AuthGate from "@/components/AuthGate";
 
 export default function AddRecipe() {
   const router = useRouter();
+  const { profile } = useAuth();
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -22,6 +24,13 @@ export default function AddRecipe() {
     link: "",
     status: "want-to-try" as Recipe["status"],
   });
+
+  // Auto-fill chef from signed-in user's profile
+  useEffect(() => {
+    if (profile?.chef_name && !form.chef) {
+      setForm((prev) => ({ ...prev, chef: profile.chef_name }));
+    }
+  }, [profile, form.chef]);
 
   const update = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
