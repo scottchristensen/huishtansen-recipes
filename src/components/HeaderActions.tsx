@@ -21,6 +21,25 @@ export default function HeaderActions() {
   return (
     <div className="flex items-center gap-2">
       <a
+        href="/meal-plan"
+        className="text-amber-100 hover:text-white text-sm font-medium px-2 py-2 transition-colors hidden sm:inline"
+        title="Meal Plan"
+      >
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+          />
+        </svg>
+      </a>
+      <a
         href="/import"
         className="text-amber-100 hover:text-white text-sm font-medium px-2 py-2 transition-colors hidden sm:inline"
         title="Import from URL"
