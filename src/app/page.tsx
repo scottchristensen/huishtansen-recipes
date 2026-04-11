@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Recipe, FilterState } from "@/lib/types";
 import {
   getRecipes,
@@ -15,6 +15,7 @@ import IngredientSearch from "@/components/IngredientSearch";
 
 export default function Home() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     chef: "",
@@ -24,9 +25,15 @@ export default function Home() {
     maxTime: "",
   });
 
-  useEffect(() => {
-    setRecipes(getRecipes());
+  const loadRecipes = useCallback(async () => {
+    const data = await getRecipes();
+    setRecipes(data);
+    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    loadRecipes();
+  }, [loadRecipes]);
 
   const chefs = useMemo(() => getUniqueChefs(recipes), [recipes]);
   const types = useMemo(() => getUniqueTypes(recipes), [recipes]);
@@ -69,11 +76,17 @@ export default function Home() {
 
         <div className="flex items-center justify-between">
           <p className="text-sm text-stone-500">
-            {filtered.length} recipe{filtered.length !== 1 ? "s" : ""}
+            {loading
+              ? "Loading..."
+              : `${filtered.length} recipe${filtered.length !== 1 ? "s" : ""}`}
           </p>
         </div>
 
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="flex justify-center py-12">
+            <div className="w-8 h-8 border-4 border-amber-300 border-t-amber-600 rounded-full animate-spin" />
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-4xl mb-3">🔍</div>
             <p className="text-stone-500 text-lg">No recipes found</p>

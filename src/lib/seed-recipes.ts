@@ -1,6 +1,6 @@
 import { Recipe } from "./types";
 
-function generateTags(recipe: Omit<Recipe, "id" | "tags" | "status">): string[] {
+function generateTags(recipe: Omit<Recipe, "id" | "tags" | "status" | "notes" | "remix_of" | "remix_label">): string[] {
   const tags: string[] = [];
 
   // Tag by type
@@ -52,6 +52,9 @@ export const seedRecipes: Recipe[] = [
     link: "https://docs.google.com/document/d/1KIlOOjimNg6CpOeK3pWOIVmnkSvWkdJEptT4nNKXEGQ/edit",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "2",
@@ -69,6 +72,9 @@ export const seedRecipes: Recipe[] = [
     link: "https://docs.google.com/document/d/1OrE5F_JUBmCgTChFm8TuByk-3QRG4eA-kcJt4dFj_Fs/edit",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "3",
@@ -86,6 +92,9 @@ export const seedRecipes: Recipe[] = [
     link: "https://docs.google.com/document/d/1xmlp0Ki8AunDxLsPkGWSp-5LTf9Q4Qphp1uWjmNQFzU/edit",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "4",
@@ -102,6 +111,9 @@ export const seedRecipes: Recipe[] = [
     link: "https://docs.google.com/document/d/1lHDZELePBXi2JY4AW9gAoz8ucPx40CWkObRAYJJCEK4/edit",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "5",
@@ -118,6 +130,9 @@ export const seedRecipes: Recipe[] = [
     link: "https://docs.google.com/document/d/1GgCpWX2ar601s1ksJb3RtK8bTRdB7uhqZpEaD9oKJCU/edit",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "6",
@@ -134,6 +149,9 @@ export const seedRecipes: Recipe[] = [
     link: "https://docs.google.com/document/d/1BnmgXUcbmTkcBR77YT60F5gK97p-m2GH8ajzOO4KU3k/edit",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "7",
@@ -149,6 +167,9 @@ export const seedRecipes: Recipe[] = [
     link: "https://docs.google.com/document/d/1jfR0dBMhkDmHTtXK2GcVwu5cp1pqCryIwbKjvrMzOlg/edit",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "8",
@@ -164,6 +185,9 @@ export const seedRecipes: Recipe[] = [
     link: "https://docs.google.com/document/d/1hsWhLgjQk8N51k6Yb9TStxf-hmHSU0kRdH5mKD37TjU/edit",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "9",
@@ -181,6 +205,9 @@ export const seedRecipes: Recipe[] = [
     link: "https://docs.google.com/document/d/1IIoSZnoSZtt8Y_rX9NbbB2jKCyxESjBEqTE-wM_3ewM/edit",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "10",
@@ -198,6 +225,9 @@ export const seedRecipes: Recipe[] = [
     link: "https://docs.google.com/document/d/1cM8Keu1z9itn6IYXCbS68s1q39xF8BFt3LHxlG1r1GU/edit",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "11",
@@ -215,6 +245,9 @@ export const seedRecipes: Recipe[] = [
     link: "https://docs.google.com/document/d/18DlvxjWs-rUtD1wR9pyv3SXWLqrQJYbCXm3Id3nm214/edit",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "12",
@@ -232,6 +265,9 @@ export const seedRecipes: Recipe[] = [
     link: "https://docs.google.com/document/d/17vtArYzqyo5iBsQAkLpyxDMCa1z67TK0dk4XfyAhaIE/edit",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "13",
@@ -249,6 +285,9 @@ export const seedRecipes: Recipe[] = [
     link: "",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "14",
@@ -265,6 +304,9 @@ export const seedRecipes: Recipe[] = [
     link: "",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "15",
@@ -281,6 +323,9 @@ export const seedRecipes: Recipe[] = [
     link: "",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "16",
@@ -298,6 +343,9 @@ export const seedRecipes: Recipe[] = [
     link: "",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "17",
@@ -315,6 +363,9 @@ export const seedRecipes: Recipe[] = [
     link: "",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "18",
@@ -332,6 +383,9 @@ export const seedRecipes: Recipe[] = [
     link: "",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "19",
@@ -349,6 +403,9 @@ export const seedRecipes: Recipe[] = [
     link: "",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "20",
@@ -366,6 +423,9 @@ export const seedRecipes: Recipe[] = [
     link: "",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "21",
@@ -383,6 +443,9 @@ export const seedRecipes: Recipe[] = [
     link: "",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "22",
@@ -400,6 +463,9 @@ export const seedRecipes: Recipe[] = [
     link: "",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "23",
@@ -417,6 +483,9 @@ export const seedRecipes: Recipe[] = [
     link: "",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "24",
@@ -434,6 +503,9 @@ export const seedRecipes: Recipe[] = [
     link: "",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "25",
@@ -450,6 +522,9 @@ export const seedRecipes: Recipe[] = [
     link: "https://cakebycourtney.com/everything-kitchen-sink-cake/",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "26",
@@ -466,6 +541,9 @@ export const seedRecipes: Recipe[] = [
     link: "https://sallysbakingaddiction.com/oatmeal-chocolate-chip-cookies/",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "27",
@@ -483,6 +561,9 @@ export const seedRecipes: Recipe[] = [
     link: "",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
   {
     id: "28",
@@ -500,6 +581,9 @@ export const seedRecipes: Recipe[] = [
     link: "",
     tags: [],
     status: "family-approved",
+    notes: "",
+    remix_of: null,
+    remix_label: "",
   },
 ];
 

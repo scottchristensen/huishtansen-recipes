@@ -1,6 +1,13 @@
 "use client";
 
-const MEAL_PLAN_KEY = "huish-meal-plan";
+import { supabase } from "./supabase";
+
+export interface MealPlanEntry {
+  id: string;
+  day: string;
+  recipe_id: string;
+  sort_order: number;
+}
 
 export interface MealPlanDay {
   day: string;
@@ -23,25 +30,61 @@ export function getEmptyMealPlan(): MealPlan {
   return DAYS.map((day) => ({ day, recipeIds: [] }));
 }
 
-export function getMealPlan(): MealPlan {
-  if (typeof window === "undefined") return getEmptyMealPlan();
+export async function getMealPlan(): Promise<MealPlan> {
+  const { data, error } = await supabase
+    .from("meal_plans")
+    .select("*")
+    .order("sort_order");
 
-  const stored = localStorage.getItem(MEAL_PLAN_KEY);
-  if (!stored) return getEmptyMealPlan();
+  if (error || !data) return getEmptyMealPlan();
 
-  try {
-    return JSON.parse(stored);
-  } catch {
-    return getEmptyMealPlan();
+  const plan = getEmptyMealPlan();
+  for (const entry of data) {
+    const dayPlan = plan.find((d) => d.day === entry.day);
+    if (dayPlan) {
+      dayPlan.recipeIds.push(entry.recipe_id);
+    }
+  }
+  return plan;
+}
+
+export async function addToMealPlan(
+  day: string,
+  recipeId: string
+): Promise<void> {
+  const { data: existing } = await supabase
+    .from("meal_plans")
+    .select("sort_order")
+    .eq("day", day)
+    .order("sort_order", { ascending: false })
+    .limit(1);
+
+  const nextOrder = existing && existing.length > 0 ? existing[0].sort_order + 1 : 0;
+
+  await supabase
+    .from("meal_plans")
+    .insert({ day, recipe_id: recipeId, sort_order: nextOrder });
+}
+
+export async function removeFromMealPlan(
+  day: string,
+  recipeId: string
+): Promise<void> {
+  // Remove first occurrence
+  const { data } = await supabase
+    .from("meal_plans")
+    .select("id")
+    .eq("day", day)
+    .eq("recipe_id", recipeId)
+    .limit(1);
+
+  if (data && data.length > 0) {
+    await supabase.from("meal_plans").delete().eq("id", data[0].id);
   }
 }
 
-export function saveMealPlan(plan: MealPlan): void {
-  localStorage.setItem(MEAL_PLAN_KEY, JSON.stringify(plan));
-}
-
-export function clearMealPlan(): void {
-  localStorage.removeItem(MEAL_PLAN_KEY);
+export async function clearMealPlan(): Promise<void> {
+  await supabase.from("meal_plans").delete().gte("id", "00000000-0000-0000-0000-000000000000");
 }
 
 export interface GroceryItem {
@@ -55,12 +98,10 @@ export function generateGroceryList(
   const allLines: string[] = [];
 
   for (const str of ingredientStrings) {
-    // Split on newlines, commas that separate distinct ingredients, or sentence-like boundaries
     const lines = str
       .split(/\n|(?:,\s*(?=\d))|(?:,\s*(?=[A-Z]))/g)
       .map((l) => l.trim())
       .filter((l) => l.length > 2)
-      // Filter out section headers and non-ingredient lines
       .filter(
         (l) =>
           !l.match(
@@ -70,7 +111,6 @@ export function generateGroceryList(
     allLines.push(...lines);
   }
 
-  // Deduplicate similar items (basic)
   const seen = new Set<string>();
   const items: GroceryItem[] = [];
 
@@ -83,7 +123,6 @@ export function generateGroceryList(
 
     if (normalized.length < 3) continue;
 
-    // Skip if we've already seen something very similar
     const key = normalized.replace(/\d+/g, "").trim();
     if (seen.has(key)) continue;
     seen.add(key);

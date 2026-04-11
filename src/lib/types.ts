@@ -12,10 +12,13 @@ export interface Recipe {
   link: string;
   tags: string[];
   status: "family-approved" | "want-to-try";
+  notes: string;
+  remix_of: string | null;
+  remix_label: string;
+  created_at?: string;
+  updated_at?: string;
+  // Loaded separately from recipe_photos table
   attemptPhotos?: string[];
-  notes?: string;
-  remixOf?: string;
-  remixLabel?: string;
 }
 
 export interface HealthySuggestion {
