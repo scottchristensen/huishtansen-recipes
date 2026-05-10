@@ -187,7 +187,7 @@ export default function MealPlanReminderModal({
             </div>
 
             <p className="text-xs text-slate-400 dark:text-slate-500">
-              Email delivery isn&apos;t hooked up yet — Resend will read these
+              Email delivery isn&apos;t hooked up yet. Resend will read these
               preferences once it&apos;s wired in.
             </p>
           </div>

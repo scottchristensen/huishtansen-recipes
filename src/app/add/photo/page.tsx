@@ -148,7 +148,7 @@ export default function AddRecipeFromPhoto() {
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
             Take a photo or upload one of a cookbook page, recipe card, or
-            handwritten recipe — we&apos;ll read it and fill in the form for you.
+            handwritten recipe and we&apos;ll read it, then fill in the form for you.
           </p>
 
           <input

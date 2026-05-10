@@ -464,7 +464,7 @@ export default function RecipeDetail() {
                     Delete &ldquo;{recipe.name}&rdquo;?
                   </h3>
                   <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                    It&apos;ll be hidden from the app — recoverable from the database if needed.
+                    It&apos;ll be hidden from the app. Recoverable from the database if needed.
                   </p>
                 </div>
               </div>

@@ -102,7 +102,7 @@ export default function SelectionActionBar({
                   Delete {count} recipe{count !== 1 ? "s" : ""}?
                 </h3>
                 <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                  They&apos;ll be hidden from the app — recoverable from the database if needed.
+                  They&apos;ll be hidden from the app. Recoverable from the database if needed.
                 </p>
                 <ul className="mt-3 text-sm text-slate-700 dark:text-slate-300 max-h-32 overflow-y-auto">
                   {selectedRecipes.map((r) => (

@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 // Auto-generated 1200x630 social card. Next.js wires this up at build time
 // for any URL that doesn't override `metadata.openGraph.images`.
 export const runtime = "nodejs";
-export const alt = "Huishtansen Eats — the Huish family recipe collection";
+export const alt = "Huishtansen Eats: the Huish family recipe collection";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -47,7 +47,7 @@ export default async function OpengraphImage() {
             maxWidth: 900,
           }}
         >
-          The Huish family recipe collection — plan, cook, and shop together.
+          The Huish family recipe collection. Plan, cook, and shop together.
         </div>
       </div>
     ),

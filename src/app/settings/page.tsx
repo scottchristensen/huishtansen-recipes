@@ -133,7 +133,7 @@ export default function SettingsPage() {
             </div>
             <div className="min-w-0">
               <p className="font-semibold text-slate-900 dark:text-slate-100 truncate">
-                {profile?.chef_name || "—"}
+                {profile?.chef_name || "Not set"}
               </p>
               <p className="text-sm text-slate-500 dark:text-slate-400 truncate">
                 {profile?.email || ""}

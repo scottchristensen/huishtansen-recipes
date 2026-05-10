@@ -335,7 +335,7 @@ export default function MealPlanPage() {
               Meal Plan
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Week of {weekRange} — resets Sunday at 5pm
+              Week of {weekRange}. Resets Sunday at 5pm.
             </p>
           </div>
           {currentUser && (
@@ -343,7 +343,7 @@ export default function MealPlanPage() {
               onClick={() => setShowReminderModal(true)}
               aria-label={
                 reminderEnabled
-                  ? "Reminder on — edit"
+                  ? "Reminder on (edit)"
                   : "Set meal plan reminder"
               }
               title={reminderEnabled ? "Reminder on" : "Set reminder"}

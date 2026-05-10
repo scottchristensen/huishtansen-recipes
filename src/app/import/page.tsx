@@ -104,7 +104,7 @@ export default function ImportRecipe() {
 
         <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-1">Import from URL</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Paste a recipe URL from any website — we&apos;ll strip out the blog story and ads and pull just the recipe.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Paste a recipe URL from any website. We&apos;ll strip out the blog story and ads and pull just the recipe.</p>
 
           <div className="flex gap-2 mb-6">
             <input

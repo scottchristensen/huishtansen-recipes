@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 
 const SITE_NAME = "Huishtansen Eats";
 const SITE_DESCRIPTION =
-  "The Huish family recipe collection — plan, cook, and shop together.";
+  "The Huish family recipe collection. Plan, cook, and shop together.";
 
 export const metadata: Metadata = {
   title: SITE_NAME,

@@ -230,7 +230,7 @@ export default function RecipeTable({
                     </span>
                   </td>
                   <td className={`px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap ${rowBg}`}>
-                    {recipe.time || "—"}
+                    {recipe.time || "·"}
                   </td>
                 </tr>
               );

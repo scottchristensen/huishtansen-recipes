@@ -619,7 +619,7 @@ function CookInner() {
           Cook Mode
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-          A clean, ad-free view of any recipe — with one-click step timers
+          A clean, ad-free view of any recipe, with one-click step timers
         </p>
       </div>
 
@@ -678,7 +678,7 @@ function CookInner() {
           Cook from a recipe URL
         </h2>
         <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
-          Paste any recipe link — we&apos;ll strip out the blog post and ads
+          Paste any recipe link and we&apos;ll strip out the blog post and ads
           and lay out just the ingredients and steps.
         </p>
         <div className="flex flex-col sm:flex-row gap-2">

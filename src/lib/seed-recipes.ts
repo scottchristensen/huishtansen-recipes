@@ -46,7 +46,7 @@ export const seedRecipes: Recipe[] = [
     servings: "6",
     photo: "https://drive.google.com/open?id=1nnswl103Y2lEeUg8algRUJBK9THPa_tp",
     instructions:
-      "In Doc — see link for full instructions. Season chicken with chili powder, smoked paprika, cumin, salt, pepper, cayenne, garlic powder, and onion powder. Cook with enchilada sauce, sliced onion, and peppers. Prepare polenta with broth, milk, cheddar, and butter. Serve bowls with chicken, polenta, black beans, avocado, queso fresco, cilantro, and tortilla chips.",
+      "In Doc, see link for full instructions. Season chicken with chili powder, smoked paprika, cumin, salt, pepper, cayenne, garlic powder, and onion powder. Cook with enchilada sauce, sliced onion, and peppers. Prepare polenta with broth, milk, cheddar, and butter. Serve bowls with chicken, polenta, black beans, avocado, queso fresco, cilantro, and tortilla chips.",
     ingredients:
       "Chicken: 1½ lbs chicken breast, 2 cups red enchilada sauce, 2 tbsp chili powder, 2 tsp smoked paprika, 1 tsp cumin, 1 tsp kosher salt, 1 tsp pepper, ½ tsp cayenne, ¼ tsp garlic powder, ¼ tsp onion powder, 1 onion sliced, 1 red pepper sliced, 1 orange pepper sliced, 1½ cups cooked black beans. Polenta: 2 cups chicken broth, 2 cups milk, 1 cup polenta, 4 oz sharp white cheddar, ¼ tsp salt, ¼ tsp pepper, 2-4 tbsp butter. Toppings: 1 avocado, 4 oz queso fresco, fresh cilantro, tortilla chips and salsa.",
     link: "https://docs.google.com/document/d/1KIlOOjimNg6CpOeK3pWOIVmnkSvWkdJEptT4nNKXEGQ/edit",
@@ -66,7 +66,7 @@ export const seedRecipes: Recipe[] = [
     servings: "6",
     photo: "https://www.momontimeout.com/wp-content/uploads/2012/05/best-biscuit-recipe-733x524.jpg",
     instructions:
-      "In Doc — see link for full instructions. Mix dry ingredients, cut in cold butter, add milk, fold and cut biscuits, bake.",
+      "In Doc, see link for full instructions. Mix dry ingredients, cut in cold butter, add milk, fold and cut biscuits, bake.",
     ingredients:
       "2 cups all-purpose flour, 1 tbsp baking powder, 1 tbsp granulated sugar, 1 tsp salt, 6 tbsp unsalted butter (very cold, European butter ideal), ¾ cup whole milk.",
     link: "https://docs.google.com/document/d/1OrE5F_JUBmCgTChFm8TuByk-3QRG4eA-kcJt4dFj_Fs/edit",
@@ -397,7 +397,7 @@ export const seedRecipes: Recipe[] = [
     servings: "1-29",
     photo: "https://4.bp.blogspot.com/-G_GvQ_4TdGE/WRoDjsH6rtI/AAAAAAAAEZg/TbL1-apwErQax_uPw7-GCTYZgDiYlKxMgCLcB/s1600/IMG_2120.JPG",
     instructions:
-      "Preheat oven to 375. Cream together sugar and butter. Mix in egg and milk. In separate bowl combine sour cream, pudding, salt, soda and lemon juice. Combine mixtures. Add flour, mix till smooth. Mix in white chocolate chips, zest, and food coloring. Roll dough into quarter-sized balls. Bake 5-7 minutes — they should look gooey when you take them out! They'll harden as they cool.",
+      "Preheat oven to 375. Cream together sugar and butter. Mix in egg and milk. In separate bowl combine sour cream, pudding, salt, soda and lemon juice. Combine mixtures. Add flour, mix till smooth. Mix in white chocolate chips, zest, and food coloring. Roll dough into quarter-sized balls. Bake 5-7 minutes; they should look gooey when you take them out! They'll harden as they cool.",
     ingredients:
       "1 cup sugar, ½ cup softened butter, 1 egg, 2 tbsp milk, ⅓ cup sour cream, 1 small box lemon pudding mix, ½ tsp salt, 3 tsp lemon juice, 2 cups flour, 1 bag (12 oz) white chocolate chips, zest from 1 lemon, yellow food coloring (optional).",
     link: "",

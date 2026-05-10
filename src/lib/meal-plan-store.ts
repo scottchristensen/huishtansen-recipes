@@ -187,7 +187,7 @@ export async function addToMealPlan(
   slot: MealSlot = "dinner"
 ): Promise<MealPlanWriteResult> {
   if (!planner) {
-    return { ok: false, error: "No planner set — pick your name first." };
+    return { ok: false, error: "No planner set. Pick your name first." };
   }
   const weekStart = getCurrentWeekStart();
   const { data: existing } = await supabase

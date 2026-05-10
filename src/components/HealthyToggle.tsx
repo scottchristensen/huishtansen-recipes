@@ -112,7 +112,7 @@ export default function HealthyToggle({
                 {source === "ai"
                   ? "AI-powered suggestions"
                   : "Suggested swaps based on common substitutions"}
-                {" — select the ones you want to try:"}
+                {". Select the ones you want to try:"}
               </p>
               {suggestions.map((s, i) => (
                 <button
