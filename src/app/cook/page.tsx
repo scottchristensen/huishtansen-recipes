@@ -3,7 +3,7 @@
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Recipe } from "@/lib/types";
-import { getRecipe } from "@/lib/recipes-store";
+import { getRecipe, saveRecipe } from "@/lib/recipes-store";
 import {
   MealSlot,
   SLOT_ICON,
@@ -15,6 +15,7 @@ import AuthGate from "@/components/AuthGate";
 
 interface ActiveTimer {
   id: string;
+  chipKey: string;
   label: string;
   durationMs: number;
   startedAt: number;
@@ -31,6 +32,7 @@ interface CookRecipe {
   photo?: string;
   photos?: string[];
   stepImages?: string[];
+  link?: string;
   source?: "saved" | "url" | "guess";
 }
 
@@ -137,6 +139,8 @@ function CookInner() {
   const [error, setError] = useState("");
   const [timers, setTimers] = useState<ActiveTimer[]>([]);
   const [, setTick] = useState(0);
+  const [savingToLibrary, setSavingToLibrary] = useState(false);
+  const [saveError, setSaveError] = useState("");
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const beepedRef = useRef<Set<string>>(new Set());
@@ -279,6 +283,7 @@ function CookInner() {
         photo: data.recipe.photo,
         photos: data.recipe.photos,
         stepImages: data.recipe.stepImages,
+        link: url,
         source: "url",
       });
     } catch (e) {
@@ -303,24 +308,84 @@ function CookInner() {
     });
   };
 
-  const startTimer = (label: string, durationMs: number) => {
+  const startTimer = (chipKey: string, label: string, durationMs: number) => {
     ensureAudioCtx();
-    setTimers((prev) => [
-      ...prev,
-      {
-        id: `${Date.now()}-${Math.random()}`,
-        label,
-        durationMs,
-        startedAt: Date.now(),
-        done: false,
-      },
-    ]);
+    setTimers((prev) => {
+      const existing = prev.find((t) => t.chipKey === chipKey);
+      if (existing) beepedRef.current.delete(existing.id);
+      const others = prev.filter((t) => t.chipKey !== chipKey);
+      return [
+        ...others,
+        {
+          id: `${Date.now()}-${Math.random()}`,
+          chipKey,
+          label,
+          durationMs,
+          startedAt: Date.now(),
+          done: false,
+        },
+      ];
+    });
   };
 
   const dismissTimer = (id: string) => {
     setTimers((prev) => prev.filter((t) => t.id !== id));
     beepedRef.current.delete(id);
   };
+
+  const timerByChip = useMemo(() => {
+    const map = new Map<string, ActiveTimer>();
+    for (const t of timers) map.set(t.chipKey, t);
+    return map;
+  }, [timers]);
+
+  const saveToLibrary = async () => {
+    if (!recipe) return;
+    setSavingToLibrary(true);
+    setSaveError("");
+    try {
+      const saved = await saveRecipe({
+        name: recipe.name,
+        type: "Main Course",
+        chef: recipe.chef && recipe.chef !== "Web" ? recipe.chef : "Web",
+        difficulty: "Medium",
+        time: recipe.time || "",
+        servings: "",
+        photo: recipe.photo || "",
+        instructions: recipe.instructions,
+        ingredients: recipe.ingredients,
+        link: recipe.link || "",
+        tags: [],
+        status: "want-to-try",
+        notes: "",
+        remix_of: null,
+        remix_label: "",
+      });
+      if (!saved) throw new Error("Couldn't save the recipe");
+      setRecipe({ ...recipe, id: saved.id, source: "saved" });
+    } catch (e) {
+      setSaveError(e instanceof Error ? e.message : "Save failed");
+    } finally {
+      setSavingToLibrary(false);
+    }
+  };
+
+  const extraPhotos = useMemo(() => {
+    const photos = recipe?.photos || [];
+    if (photos.length === 0) return [];
+    const norm = (u: string) => u.split("?")[0];
+    const coverKey = recipe?.photo ? norm(recipe.photo) : "";
+    const seen = new Set<string>();
+    if (coverKey) seen.add(coverKey);
+    const out: string[] = [];
+    for (const src of photos) {
+      const key = norm(src);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(src);
+    }
+    return out;
+  }, [recipe]);
 
   const ingredientLines = useMemo(
     () =>
@@ -364,18 +429,41 @@ function CookInner() {
               {recipe.time || ""}
             </p>
           </div>
-          <button
-            onClick={() => {
-              setRecipe(null);
-              setUrl("");
-              setError("");
-              router.replace("/cook");
-            }}
-            className="px-3 py-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-sm hover:bg-slate-50 dark:hover:bg-slate-800"
-          >
-            Cook something else
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => {
+                setRecipe(null);
+                setUrl("");
+                setError("");
+                setSaveError("");
+                router.replace("/cook");
+              }}
+              className="px-3 py-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-sm hover:bg-slate-50 dark:hover:bg-slate-800"
+            >
+              Cook something else
+            </button>
+            {recipe.source === "url" && (
+              <button
+                onClick={saveToLibrary}
+                disabled={savingToLibrary}
+                className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-60"
+              >
+                {savingToLibrary ? "Saving..." : "+ Add to recipes"}
+              </button>
+            )}
+            {recipe.source === "saved" && recipe.id && (
+              <a
+                href={`/recipe/${recipe.id}`}
+                className="px-4 py-2 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              >
+                View in library
+              </a>
+            )}
+          </div>
         </div>
+        {saveError && (
+          <p className="text-sm text-red-600 dark:text-red-400">{saveError}</p>
+        )}
 
         {recipe.photo && (
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
@@ -388,9 +476,9 @@ function CookInner() {
                 (e.target as HTMLImageElement).style.display = "none";
               }}
             />
-            {recipe.photos && recipe.photos.length > 1 && (
+            {extraPhotos.length > 0 && (
               <div className="flex gap-2 p-2 overflow-x-auto bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700">
-                {recipe.photos.map((src, i) => (
+                {extraPhotos.map((src, i) => (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
                     key={`${src}-${i}`}
@@ -404,65 +492,6 @@ function CookInner() {
                 ))}
               </div>
             )}
-          </div>
-        )}
-
-        {timers.length > 0 && (
-          <div className="bg-slate-50 dark:bg-emerald-950/40 border border-slate-300 dark:border-emerald-800 rounded-xl p-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 mb-2">
-              Active Timers
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {timers.map((t) => {
-                const remaining = t.durationMs - (Date.now() - t.startedAt);
-                const done = remaining <= 0 || t.done;
-                return (
-                  <div
-                    key={t.id}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
-                      done
-                        ? "bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-700 animate-pulse"
-                        : "bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700"
-                    }`}
-                  >
-                    <span className="text-base">{done ? "🔔" : "⏱"}</span>
-                    <div className="text-sm">
-                      <div className="font-medium text-slate-900 dark:text-slate-100">
-                        {t.label}
-                      </div>
-                      <div
-                        className={`font-mono text-xs ${
-                          done
-                            ? "text-red-700 dark:text-red-300 font-bold"
-                            : "text-slate-500 dark:text-slate-400"
-                        }`}
-                      >
-                        {done ? "Time's up!" : formatRemaining(remaining)}
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => dismissTimer(t.id)}
-                      className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 ml-1"
-                      aria-label="Dismiss"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
           </div>
         )}
 
@@ -506,27 +535,74 @@ function CookInner() {
                     )}
                     {step.times.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-1.5">
-                        {step.times.map((tc) => (
-                          <button
-                            key={tc.key}
-                            onClick={() =>
-                              startTimer(
-                                `Step ${step.index} · ${formatDuration(tc.ms)}`,
-                                tc.ms
-                              )
-                            }
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-600 text-white text-xs font-medium hover:bg-emerald-700 transition-colors"
-                          >
-                            <svg
-                              className="w-3.5 h-3.5"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
+                        {step.times.map((tc) => {
+                          const chipKey = `step-${step.index}-${tc.key}`;
+                          const timer = timerByChip.get(chipKey);
+                          if (timer) {
+                            const remaining =
+                              timer.durationMs - (Date.now() - timer.startedAt);
+                            const done = remaining <= 0 || timer.done;
+                            return (
+                              <span
+                                key={tc.key}
+                                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border ${
+                                  done
+                                    ? "bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-700 text-red-700 dark:text-red-300 animate-pulse"
+                                    : "bg-white dark:bg-slate-900 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300"
+                                }`}
+                              >
+                                <span>{done ? "🔔" : "⏱"}</span>
+                                <span className="font-mono">
+                                  {done
+                                    ? "Time's up!"
+                                    : formatRemaining(remaining)}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => dismissTimer(timer.id)}
+                                  className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 ml-0.5"
+                                  aria-label="Dismiss timer"
+                                >
+                                  <svg
+                                    className="w-3 h-3"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M6 18L18 6M6 6l12 12"
+                                    />
+                                  </svg>
+                                </button>
+                              </span>
+                            );
+                          }
+                          return (
+                            <button
+                              key={tc.key}
+                              onClick={() =>
+                                startTimer(
+                                  chipKey,
+                                  `Step ${step.index} · ${formatDuration(tc.ms)}`,
+                                  tc.ms
+                                )
+                              }
+                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-600 text-white text-xs font-medium hover:bg-emerald-700 transition-colors"
                             >
-                              <path d="M6 4l10 6-10 6V4z" />
-                            </svg>
-                            {formatDuration(tc.ms)}
-                          </button>
-                        ))}
+                              <svg
+                                className="w-3.5 h-3.5"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M6 4l10 6-10 6V4z" />
+                              </svg>
+                              {formatDuration(tc.ms)}
+                            </button>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
@@ -540,7 +616,7 @@ function CookInner() {
   }
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
+    <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
           Cook Mode
@@ -608,7 +684,7 @@ function CookInner() {
           Paste any recipe link — we&apos;ll strip out the blog post and ads
           and lay out just the ingredients and steps.
         </p>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <input
             type="url"
             value={url}
@@ -617,12 +693,12 @@ function CookInner() {
               if (e.key === "Enter") loadFromUrl();
             }}
             placeholder="https://..."
-            className="flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="w-full sm:flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
           />
           <button
             onClick={loadFromUrl}
             disabled={!url || loading}
-            className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-semibold text-sm hover:bg-emerald-700 transition-colors disabled:opacity-50"
+            className="w-full sm:w-auto px-4 py-2 bg-emerald-600 text-white rounded-lg font-semibold text-sm hover:bg-emerald-700 transition-colors disabled:opacity-50"
           >
             {loading ? "Loading..." : "Cook"}
           </button>

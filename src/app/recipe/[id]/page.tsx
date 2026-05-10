@@ -270,13 +270,13 @@ export default function RecipeDetail() {
                   onChange={(e) => updateEdit("name", e.target.value)}
                   className={`${inputClasses} text-xl font-bold`}
                 />
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input type="text" value={editForm.chef || ""} onChange={(e) => updateEdit("chef", e.target.value)} placeholder="Chef" className={inputClasses} />
                   <select value={editForm.type || ""} onChange={(e) => updateEdit("type", e.target.value)} className={inputClasses}>
                     <option>Main Course</option><option>Salad</option><option>Breakfast</option><option>Dessert</option><option>Baked Good</option><option>Appetizers/Snacks</option><option>Side Dish</option>
                   </select>
                 </div>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <select value={editForm.difficulty || ""} onChange={(e) => updateEdit("difficulty", e.target.value)} className={inputClasses}>
                     <option>Easy</option><option>Medium</option><option>Hard</option>
                   </select>

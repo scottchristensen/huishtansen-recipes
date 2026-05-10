@@ -172,12 +172,20 @@ export async function getAllMealPlans(): Promise<
   });
 }
 
+export interface MealPlanWriteResult {
+  ok: boolean;
+  error?: string;
+}
+
 export async function addToMealPlan(
   day: string,
   recipeId: string,
   planner: string,
   slot: MealSlot = "dinner"
-): Promise<void> {
+): Promise<MealPlanWriteResult> {
+  if (!planner) {
+    return { ok: false, error: "No planner set — pick your name first." };
+  }
   const weekStart = getCurrentWeekStart();
   const { data: existing } = await supabase
     .from("meal_plans")
@@ -191,7 +199,7 @@ export async function addToMealPlan(
   const nextOrder =
     existing && existing.length > 0 ? existing[0].sort_order + 1 : 0;
 
-  await supabase.from("meal_plans").insert({
+  const { error } = await supabase.from("meal_plans").insert({
     day,
     recipe_id: recipeId,
     sort_order: nextOrder,
@@ -199,6 +207,12 @@ export async function addToMealPlan(
     meal_slot: slot,
     week_start: weekStart,
   });
+
+  if (error) {
+    console.error("addToMealPlan failed:", error);
+    return { ok: false, error: error.message };
+  }
+  return { ok: true };
 }
 
 export async function removeFromMealPlan(
@@ -206,7 +220,7 @@ export async function removeFromMealPlan(
   recipeId: string,
   planner: string,
   slot?: MealSlot
-): Promise<void> {
+): Promise<MealPlanWriteResult> {
   let query = supabase
     .from("meal_plans")
     .select("id")
@@ -216,11 +230,23 @@ export async function removeFromMealPlan(
     .eq("week_start", getCurrentWeekStart());
   if (slot) query = query.eq("meal_slot", slot);
 
-  const { data } = await query.limit(1);
+  const { data, error: selectErr } = await query.limit(1);
+  if (selectErr) {
+    console.error("removeFromMealPlan select failed:", selectErr);
+    return { ok: false, error: selectErr.message };
+  }
 
   if (data && data.length > 0) {
-    await supabase.from("meal_plans").delete().eq("id", data[0].id);
+    const { error } = await supabase
+      .from("meal_plans")
+      .delete()
+      .eq("id", data[0].id);
+    if (error) {
+      console.error("removeFromMealPlan delete failed:", error);
+      return { ok: false, error: error.message };
+    }
   }
+  return { ok: true };
 }
 
 export async function clearMealPlan(planner: string): Promise<void> {

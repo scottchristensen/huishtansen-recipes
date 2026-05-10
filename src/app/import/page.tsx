@@ -150,7 +150,7 @@ export default function ImportRecipe() {
                 <input type="text" value={preview.name || ""} onChange={(e) => updatePreview("name", e.target.value)} className={inputClasses} />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Source / Chef</label>
                   <input type="text" value={preview.chef || ""} onChange={(e) => updatePreview("chef", e.target.value)} placeholder="Pinterest, Olivia, Web..." className={inputClasses} />
@@ -163,7 +163,7 @@ export default function ImportRecipe() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Difficulty</label>
                   <select value={preview.difficulty || "Medium"} onChange={(e) => updatePreview("difficulty", e.target.value)} className={inputClasses}>

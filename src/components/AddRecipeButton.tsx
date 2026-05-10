@@ -24,7 +24,8 @@ export default function AddRecipeButton() {
         onClick={() => setOpen((v) => !v)}
         className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg font-semibold text-sm hover:bg-emerald-700 transition-colors"
       >
-        + Add Recipe
+        <span className="sm:hidden">+ Add</span>
+        <span className="hidden sm:inline">+ Add Recipe</span>
       </button>
 
       {open && (

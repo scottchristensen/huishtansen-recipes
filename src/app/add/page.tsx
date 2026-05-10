@@ -80,7 +80,7 @@ export default function AddRecipe() {
               <input type="text" required value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Mom's Famous Pasta" className={inputClasses} />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Chef / Source *</label>
                 <input type="text" required value={form.chef} onChange={(e) => update("chef", e.target.value)} placeholder="Who made this?" className={inputClasses} />
@@ -93,7 +93,7 @@ export default function AddRecipe() {
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Difficulty</label>
                 <select value={form.difficulty} onChange={(e) => update("difficulty", e.target.value)} className={inputClasses}>

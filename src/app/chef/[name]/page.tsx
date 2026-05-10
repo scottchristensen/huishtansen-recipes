@@ -235,7 +235,7 @@ export default function ChefProfilePage() {
           )}
 
           {/* Quick stats row */}
-          <div className="flex justify-center gap-6 mt-5">
+          <div className="flex flex-wrap justify-center gap-x-4 sm:gap-x-6 gap-y-3 mt-5">
             <div className="text-center">
               <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-400">
                 {chefRecipes.length}

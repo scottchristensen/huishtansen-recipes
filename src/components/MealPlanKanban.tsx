@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Recipe } from "@/lib/types";
 import {
   MEAL_SLOTS,
@@ -17,19 +17,38 @@ interface DragPayload {
   from?: { day: string; slot: MealSlot };
 }
 
+// Module-level fallback for the in-flight drag payload. Custom MIME types are
+// sometimes stripped by the browser (e.g. when the drop target is in a
+// different document or sandboxed iframe), and `dataTransfer.getData()` is
+// also blank during `dragover` in most browsers — so we keep a copy here that
+// always works for same-tab drags.
+let activeDragPayload: DragPayload | null = null;
+
 function readDrag(e: React.DragEvent): DragPayload | null {
+  if (activeDragPayload) return activeDragPayload;
   try {
     const raw = e.dataTransfer.getData(DRAG_MIME);
-    if (!raw) return null;
-    return JSON.parse(raw) as DragPayload;
+    if (raw) return JSON.parse(raw) as DragPayload;
   } catch {
-    return null;
+    // ignore
   }
+  return null;
 }
 
 function writeDrag(e: React.DragEvent, payload: DragPayload) {
-  e.dataTransfer.setData(DRAG_MIME, JSON.stringify(payload));
+  activeDragPayload = payload;
+  try {
+    e.dataTransfer.setData(DRAG_MIME, JSON.stringify(payload));
+    // text/plain is a near-universal fallback that almost no browser blocks.
+    e.dataTransfer.setData("text/plain", payload.recipeId);
+  } catch {
+    // some test environments (jsdom) reject setData
+  }
   e.dataTransfer.effectAllowed = "move";
+}
+
+function clearActiveDrag() {
+  activeDragPayload = null;
 }
 
 export type KanbanLayout = "kanban" | "list";
@@ -109,18 +128,25 @@ export default function MealPlanKanban({
 
     if (isEmpty) {
       return (
-        <button
+        <div
           key={slot}
-          type="button"
+          role="button"
+          tabIndex={0}
           onClick={() => onAddClick(day, slot)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onAddClick(day, slot);
+            }
+          }}
           onDragOver={handleDragOver(cellKey)}
           onDragEnter={handleDragOver(cellKey)}
           onDragLeave={handleDragLeave(cellKey)}
           onDrop={handleDrop(day, slot)}
           className={`group w-full text-left p-2 min-h-[88px] transition-colors cursor-pointer ${extraClass} ${
             isHovered
-              ? "bg-emerald-100/70 dark:bg-emerald-900/30 ring-2 ring-emerald-400 ring-inset"
-              : "hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
+              ? "bg-slate-100 dark:bg-slate-800 ring-2 ring-slate-400 dark:ring-slate-500 ring-inset"
+              : "hover:bg-slate-50 dark:hover:bg-slate-800/60"
           }`}
           aria-label={`Add a recipe to ${day} ${SLOT_LABEL[slot]}`}
         >
@@ -130,13 +156,13 @@ export default function MealPlanKanban({
               {SLOT_LABEL[slot]}
             </span>
           </div>
-          <p className="text-xs text-slate-400 dark:text-slate-500 italic group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors inline-flex items-center gap-1">
+          <p className="text-xs text-slate-400 dark:text-slate-500 italic group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors inline-flex items-center gap-1">
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
             Add a recipe
           </p>
-        </button>
+        </div>
       );
     }
 
@@ -145,7 +171,7 @@ export default function MealPlanKanban({
         key={slot}
         className={`p-2 min-h-[88px] transition-colors ${extraClass} ${
           isHovered
-            ? "bg-emerald-100/70 dark:bg-emerald-900/30 ring-2 ring-emerald-400 ring-inset"
+            ? "bg-slate-100 dark:bg-slate-800 ring-2 ring-slate-400 dark:ring-slate-500 ring-inset"
             : ""
         }`}
         onDragOver={handleDragOver(cellKey)}
@@ -160,7 +186,7 @@ export default function MealPlanKanban({
           </span>
           <button
             onClick={() => onAddClick(day, slot)}
-            className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors p-0.5"
+            className="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors p-0.5"
             aria-label={`Add to ${day} ${slot}`}
             title="Add another recipe"
           >
@@ -185,10 +211,11 @@ export default function MealPlanKanban({
                       from: { day, slot },
                     })
                   }
+                  onDragEnd={clearActiveDrag}
                   className="group flex items-center gap-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md p-1.5 cursor-grab active:cursor-grabbing select-none"
                 >
                   <div
-                    className="w-7 h-7 rounded bg-slate-200 dark:bg-slate-700 overflow-hidden shrink-0 pointer-events-none"
+                    className="w-7 h-7 rounded bg-slate-200 dark:bg-slate-700 overflow-hidden shrink-0"
                     aria-hidden
                   >
                     {recipe.photo ? (
@@ -216,7 +243,7 @@ export default function MealPlanKanban({
                     draggable={false}
                     onClick={(e) => e.stopPropagation()}
                     onMouseDown={(e) => e.stopPropagation()}
-                    className="text-slate-400 hover:text-emerald-700 dark:hover:text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 opacity-0 group-hover:opacity-100 transition-opacity"
                     aria-label="Open recipe"
                     title="Open recipe"
                   >
@@ -364,10 +391,11 @@ function RecipeChip({ recipe, onRemove }: ChipProps) {
     <div
       draggable
       onDragStart={(e) => writeDrag(e, { recipeId: recipe.id })}
-      className="group inline-flex items-center gap-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-full pl-1 pr-2 py-1 text-xs text-slate-800 dark:text-slate-200 cursor-grab active:cursor-grabbing shadow-sm select-none"
+      onDragEnd={clearActiveDrag}
+      className="group inline-flex items-center gap-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-full pl-1 pr-2 py-1 text-xs text-slate-800 dark:text-slate-200 cursor-grab active:cursor-grabbing shadow-sm select-none hover:border-emerald-400"
     >
       <div
-        className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden pointer-events-none"
+        className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden"
         aria-hidden
       >
         {recipe.photo ? (
@@ -422,33 +450,33 @@ interface PendingTrayProps {
   onRemove: (id: string) => void;
 }
 
-export function PendingTray({ pending, onClear, onRemove }: PendingTrayProps) {
+export function PendingTray({
+  pending,
+  onClear,
+  onRemove,
+}: PendingTrayProps) {
   if (pending.length === 0) return null;
   return (
-    <div className="bg-slate-50 dark:bg-emerald-950/30 border border-slate-300 dark:border-emerald-800 rounded-xl p-3">
+    <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-3">
       <div className="flex items-center justify-between mb-2">
         <div>
-          <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">
+          <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
             {pending.length} recipe{pending.length !== 1 ? "s" : ""} ready to drop
           </p>
-          <p className="text-xs text-emerald-700/80 dark:text-emerald-300/80">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Drag any card onto the day + meal you want it on
           </p>
         </div>
         <button
           onClick={onClear}
-          className="text-xs text-emerald-700 dark:text-emerald-300 hover:underline"
+          className="text-xs text-slate-600 dark:text-slate-300 hover:underline"
         >
           Clear
         </button>
       </div>
       <div className="flex flex-wrap gap-1.5">
         {pending.map((recipe) => (
-          <RecipeChip
-            key={recipe.id}
-            recipe={recipe}
-            onRemove={onRemove}
-          />
+          <RecipeChip key={recipe.id} recipe={recipe} onRemove={onRemove} />
         ))}
       </div>
     </div>
@@ -463,25 +491,80 @@ interface SuggestionsTrayProps {
   suggestions: Recipe[];
 }
 
+const SUGGESTIONS_COLLAPSED_KEY = "huish-suggestions-collapsed";
+
 export function SuggestionsTray({ suggestions }: SuggestionsTrayProps) {
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setCollapsed(
+      window.localStorage.getItem(SUGGESTIONS_COLLAPSED_KEY) === "1"
+    );
+  }, []);
+
+  const toggle = () => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      try {
+        window.localStorage.setItem(
+          SUGGESTIONS_COLLAPSED_KEY,
+          next ? "1" : "0"
+        );
+      } catch {}
+      return next;
+    });
+  };
+
   if (suggestions.length === 0) return null;
+
   return (
     <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-3">
-      <div className="flex items-center justify-between mb-2">
-        <div>
-          <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+      <button
+        type="button"
+        onClick={toggle}
+        aria-expanded={!collapsed}
+        className="w-full flex items-start justify-between gap-3 text-left group"
+      >
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 inline-flex items-center gap-1.5">
             ✨ Suggested for this week
+            {collapsed && (
+              <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                ({suggestions.length})
+              </span>
+            )}
           </p>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Drag any card onto a day + meal slot
-          </p>
+          {!collapsed && (
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Drag any card onto the day + meal you want it on
+            </p>
+          )}
         </div>
-      </div>
-      <div className="flex flex-wrap gap-1.5">
-        {suggestions.map((recipe) => (
-          <RecipeChip key={recipe.id} recipe={recipe} />
-        ))}
-      </div>
+        <svg
+          className={`w-4 h-4 shrink-0 mt-1 text-slate-400 dark:text-slate-500 transition-transform ${
+            collapsed ? "" : "rotate-180"
+          }`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+      {!collapsed && (
+        <div className="flex flex-wrap gap-1.5 mt-2">
+          {suggestions.map((recipe) => (
+            <RecipeChip key={recipe.id} recipe={recipe} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
