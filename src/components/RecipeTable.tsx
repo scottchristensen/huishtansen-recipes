@@ -120,21 +120,9 @@ export default function RecipeTable({
               </th>
               <SortHeader label="Name" sortableKey="name" />
               <SortHeader label="Chef" sortableKey="chef" />
-              <SortHeader
-                label="Type"
-                sortableKey="type"
-                className="hidden sm:table-cell"
-              />
-              <SortHeader
-                label="Difficulty"
-                sortableKey="difficulty"
-                className="hidden md:table-cell"
-              />
-              <SortHeader
-                label="Time"
-                sortableKey="time"
-                className="hidden md:table-cell"
-              />
+              <SortHeader label="Type" sortableKey="type" />
+              <SortHeader label="Difficulty" sortableKey="difficulty" />
+              <SortHeader label="Time" sortableKey="time" />
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -222,17 +210,17 @@ export default function RecipeTable({
                       {recipe.chef}
                     </a>
                   </td>
-                  <td className="px-4 py-3 text-slate-600 dark:text-slate-300 hidden sm:table-cell">
+                  <td className="px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap">
                     {recipe.type}
                   </td>
-                  <td className="px-4 py-3 hidden md:table-cell">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <span
                       className={`text-xs font-medium px-2 py-1 rounded-full ${difficultyColor[recipe.difficulty]}`}
                     >
                       {recipe.difficulty}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-slate-600 dark:text-slate-300 hidden md:table-cell">
+                  <td className="px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap">
                     {recipe.time || "—"}
                   </td>
                 </tr>
