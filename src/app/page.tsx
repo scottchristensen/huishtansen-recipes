@@ -34,11 +34,7 @@ export default function Home() {
 
   useEffect(() => {
     const saved = localStorage.getItem(VIEW_KEY);
-    if (saved === "table" || saved === "tile") {
-      setView(saved);
-    } else if (typeof window !== "undefined" && window.innerWidth < 768) {
-      setView("tile");
-    }
+    if (saved === "table" || saved === "tile") setView(saved);
   }, []);
 
   const switchView = (next: View) => {
