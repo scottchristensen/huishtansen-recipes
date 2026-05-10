@@ -121,7 +121,7 @@ export default function RecipeTable({
               <SortHeader
                 label="Name"
                 sortableKey="name"
-                className="sticky left-12 z-20 bg-slate-50 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700"
+                className="sm:sticky sm:left-12 sm:z-20 sm:bg-slate-50 sm:dark:bg-slate-800 sm:border-r sm:border-slate-200 sm:dark:border-slate-700"
               />
               <SortHeader label="Chef" sortableKey="chef" />
               <SortHeader label="Type" sortableKey="type" />
@@ -194,7 +194,7 @@ export default function RecipeTable({
                     </button>
                   </td>
                   <td
-                    className={`sticky left-12 z-10 px-4 py-3 border-r border-slate-200 dark:border-slate-700 ${rowBg}`}
+                    className={`sm:sticky sm:left-12 sm:z-10 px-4 py-3 sm:border-r sm:border-slate-200 sm:dark:border-slate-700 ${rowBg}`}
                   >
                     <div className="flex items-center gap-2 whitespace-nowrap">
                       <a
