@@ -6,7 +6,7 @@ import { Recipe } from "./types";
 // Simple shared family code while SSO is paused. Replace with Supabase Auth
 // later — see _stash/sso/README.md.
 const PIN_AUTH_KEY = "huish-pin-auth";
-const FAMILY_CODE = "2468";
+const FAMILY_CODE = "roger";
 
 export const AUTH_CHANGE_EVENT = "huish:auth-change";
 

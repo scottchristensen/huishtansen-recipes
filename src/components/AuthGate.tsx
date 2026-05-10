@@ -53,21 +53,45 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
           <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
             Pick your name. You can change it later.
           </p>
-          <div className="flex flex-wrap justify-center gap-2">
-            {FAMILY_MEMBERS.map((member) => (
-              <button
-                key={member.name}
-                onClick={() => {
-                  setCurrentUser(member.name);
-                  setNeedsName(false);
-                }}
-                className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-emerald-100 dark:hover:bg-slate-700 hover:border-emerald-300 transition-colors"
-              >
-                <span className="text-lg">{member.emoji}</span>
-                {member.name}
-              </button>
-            ))}
-          </div>
+          {(() => {
+            const kidNames = new Set(["Cannon", "Lydia"]);
+            const adults = FAMILY_MEMBERS.filter((m) => !kidNames.has(m.name));
+            const kids = FAMILY_MEMBERS.filter((m) => kidNames.has(m.name));
+            const buttonClasses =
+              "flex items-center justify-center gap-2 px-3 py-2.5 bg-emerald-50 dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-emerald-100 dark:hover:bg-slate-700 hover:border-emerald-300 transition-colors";
+            const onPick = (name: string) => {
+              setCurrentUser(name);
+              setNeedsName(false);
+            };
+            return (
+              <div className="space-y-2">
+                <div className="grid grid-cols-3 gap-2">
+                  {adults.map((member) => (
+                    <button
+                      key={member.name}
+                      onClick={() => onPick(member.name)}
+                      className={buttonClasses}
+                    >
+                      <span className="text-lg">{member.emoji}</span>
+                      {member.name}
+                    </button>
+                  ))}
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {kids.map((member) => (
+                    <button
+                      key={member.name}
+                      onClick={() => onPick(member.name)}
+                      className={buttonClasses}
+                    >
+                      <span className="text-lg">{member.emoji}</span>
+                      {member.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </div>
     );
