@@ -28,7 +28,7 @@ export default function FilterBar({
     filters.maxTime;
 
   return (
-    <div className="flex items-center gap-2 flex-nowrap overflow-x-auto">
+    <div className="flex items-center flex-wrap gap-2">
       <ChefDropdown
         chefs={chefs}
         value={filters.chef}
@@ -82,7 +82,7 @@ export default function FilterBar({
               maxTime: "",
             })
           }
-          className="px-3 py-2 text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium shrink-0"
+          className="px-3 py-2 text-sm text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium shrink-0"
         >
           Clear
         </button>
@@ -94,7 +94,7 @@ export default function FilterBar({
           placeholder="Search recipes..."
           value={filters.search}
           onChange={(e) => update("search", e.target.value)}
-          className="w-full pl-9 pr-3 py-2 bg-white dark:bg-slate-900 border border-emerald-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent"
+          className="w-full pl-9 pr-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
         />
         <svg
           className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500"
@@ -150,7 +150,7 @@ function FilterDropdown({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-900 border border-emerald-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-emerald-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-400 whitespace-nowrap"
+        className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 whitespace-nowrap"
       >
         <span>{label}</span>
         <svg
@@ -168,7 +168,7 @@ function FilterDropdown({
         </svg>
       </button>
       {open && (
-        <div className="absolute z-20 mt-1 min-w-full bg-white dark:bg-slate-900 border border-emerald-200 dark:border-slate-700 rounded-lg shadow-lg overflow-hidden whitespace-nowrap max-h-72 overflow-y-auto">
+        <div className="absolute z-20 mt-1 min-w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg shadow-lg overflow-hidden whitespace-nowrap max-h-72 overflow-y-auto">
           {options.map((opt) => (
             <button
               key={opt.value}
@@ -177,9 +177,9 @@ function FilterDropdown({
                 onChange(opt.value);
                 setOpen(false);
               }}
-              className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors ${
+              className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors ${
                 value === opt.value
-                  ? "bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 font-medium"
+                  ? "bg-slate-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 font-medium"
                   : "text-slate-700 dark:text-slate-200"
               }`}
             >
@@ -221,7 +221,7 @@ function ChefDropdown({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-900 border border-emerald-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-emerald-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-400 whitespace-nowrap"
+        className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 whitespace-nowrap"
       >
         {value ? <ChefAvatar name={value} size="sm" linked={false} /> : null}
         <span>{value || "Any Chef"}</span>
@@ -240,20 +240,20 @@ function ChefDropdown({
         </svg>
       </button>
       {open && (
-        <div className="absolute z-20 mt-1 w-56 bg-white dark:bg-slate-900 border border-emerald-200 dark:border-slate-700 rounded-lg shadow-lg overflow-hidden">
+        <div className="absolute z-20 mt-1 w-56 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg shadow-lg overflow-hidden">
           <button
             type="button"
             onClick={() => {
               onChange("");
               setOpen(false);
             }}
-            className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors ${
+            className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors ${
               !value
-                ? "bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 font-medium"
+                ? "bg-slate-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 font-medium"
                 : "text-slate-700 dark:text-slate-200"
             }`}
           >
-            <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-xs">
+            <span className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs">
               👨‍👩‍👧
             </span>
             Any Chef
@@ -267,9 +267,9 @@ function ChefDropdown({
                   onChange(chef);
                   setOpen(false);
                 }}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors ${
+                className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors ${
                   value === chef
-                    ? "bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 font-medium"
+                    ? "bg-slate-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 font-medium"
                     : "text-slate-700 dark:text-slate-200"
                 }`}
               >

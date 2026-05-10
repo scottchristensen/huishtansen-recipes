@@ -89,7 +89,7 @@ export default function RecipeTable({
         <button
           type="button"
           onClick={() => handleSort(sortableKey)}
-          className="inline-flex items-center gap-1 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors cursor-pointer"
         >
           {label}
           <span className="text-slate-400 dark:text-slate-500 text-xs">
@@ -101,10 +101,10 @@ export default function RecipeTable({
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-emerald-100 dark:border-slate-700 overflow-hidden">
+    <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-emerald-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+          <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
             <tr>
               <th className="px-3 py-3 w-12">
                 <input
@@ -114,7 +114,7 @@ export default function RecipeTable({
                     if (el) el.indeterminate = !allSelected && someSelected;
                   }}
                   onChange={onToggleSelectAll}
-                  className="w-4 h-4 rounded border-emerald-300 dark:border-emerald-700 text-emerald-500 focus:ring-emerald-400 cursor-pointer"
+                  className="w-4 h-4 rounded border-slate-300 dark:border-emerald-700 text-emerald-500 focus:ring-emerald-500 cursor-pointer"
                   aria-label="Select all"
                 />
               </th>
@@ -137,14 +137,14 @@ export default function RecipeTable({
               />
             </tr>
           </thead>
-          <tbody className="divide-y divide-emerald-50 dark:divide-slate-800">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {sorted.map((recipe) => {
               const isSelected = selectedIds.has(recipe.id);
               return (
                 <tr
                   key={recipe.id}
                   className={`group transition-colors ${
-                    isSelected ? "bg-emerald-50 dark:bg-slate-800" : "hover:bg-emerald-50/50"
+                    isSelected ? "bg-slate-50 dark:bg-slate-800" : "hover:bg-slate-50"
                   }`}
                 >
                   <td className="px-3 py-2 w-12">
@@ -179,7 +179,7 @@ export default function RecipeTable({
                         <span className="bg-white dark:bg-slate-900 rounded-sm p-0.5 shadow">
                           {isSelected ? (
                             <svg
-                              className="w-3 h-3 text-emerald-600 dark:text-emerald-400"
+                              className="w-3 h-3 text-emerald-700 dark:text-emerald-400"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -202,12 +202,12 @@ export default function RecipeTable({
                     <div className="flex items-center gap-2">
                       <a
                         href={`/recipe/${recipe.id}`}
-                        className="font-medium text-slate-900 dark:text-slate-100 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                        className="font-medium text-slate-900 dark:text-slate-100 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors"
                       >
                         {recipe.name}
                       </a>
                       {isRecipeNew(recipe.created_at) && (
-                        <span className="text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-emerald-500 text-white">
+                        <span className="text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-emerald-600 text-white">
                           New
                         </span>
                       )}
@@ -216,7 +216,7 @@ export default function RecipeTable({
                   <td className="px-4 py-3">
                     <a
                       href={`/chef/${encodeURIComponent(recipe.chef)}`}
-                      className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                      className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors"
                     >
                       <ChefAvatar name={recipe.chef} size="sm" />
                       {recipe.chef}

@@ -139,13 +139,13 @@ export default function Home() {
               ? "Loading..."
               : `${filtered.length} recipe${filtered.length !== 1 ? "s" : ""}`}
           </p>
-          <div className="inline-flex rounded-lg border border-emerald-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-0.5">
+          <div className="inline-flex rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-0.5">
             <button
               onClick={() => switchView("tile")}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors inline-flex items-center gap-1.5 ${
                 view === "tile"
-                  ? "bg-emerald-500 text-white"
-                  : "text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400"
+                  ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-sm"
+                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
               }`}
               title="Tile view"
             >
@@ -168,8 +168,8 @@ export default function Home() {
               onClick={() => switchView("table")}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors inline-flex items-center gap-1.5 ${
                 view === "table"
-                  ? "bg-emerald-500 text-white"
-                  : "text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400"
+                  ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-sm"
+                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
               }`}
               title="Table view"
             >
@@ -193,7 +193,7 @@ export default function Home() {
 
         {loading ? (
           <div className="flex justify-center py-12">
-            <div className="w-8 h-8 border-4 border-emerald-300 dark:border-emerald-700 border-t-emerald-600 rounded-full animate-spin" />
+            <div className="w-8 h-8 border-4 border-slate-300 dark:border-emerald-700 border-t-emerald-600 rounded-full animate-spin" />
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-12">

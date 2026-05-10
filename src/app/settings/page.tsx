@@ -85,7 +85,7 @@ export default function SettingsPage() {
         <div>
           <button
             onClick={() => router.back()}
-            className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 text-sm font-medium mb-3 inline-flex items-center gap-1"
+            className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 text-sm font-medium mb-3 inline-flex items-center gap-1"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -100,13 +100,13 @@ export default function SettingsPage() {
           </p>
         </div>
 
-        <section className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-700 p-6">
+        <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
             Profile
           </h2>
           <div className="flex items-center gap-4 mb-4">
             <div className="relative group">
-              <div className="w-20 h-20 rounded-full bg-emerald-100 dark:bg-emerald-900/40 overflow-hidden flex items-center justify-center text-2xl">
+              <div className="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center text-2xl">
                 {profile?.avatar_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -145,7 +145,7 @@ export default function SettingsPage() {
             here. Edit your bio and stats on{" "}
             <a
               href={`/chef/${profile?.chef_name}`}
-              className="text-emerald-600 dark:text-emerald-400 hover:underline"
+              className="text-emerald-700 dark:text-emerald-400 hover:underline"
             >
               your chef page
             </a>
@@ -153,13 +153,13 @@ export default function SettingsPage() {
           </p>
         </section>
 
-        <section className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-700 p-6">
+        <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
               Notifications
             </h2>
             {savedFlash && (
-              <span className="text-xs text-emerald-600 dark:text-emerald-400">
+              <span className="text-xs text-emerald-700 dark:text-emerald-400">
                 Saved
               </span>
             )}
@@ -186,7 +186,7 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        <section className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-700 p-6">
+        <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">
             Appearance
           </h2>
@@ -209,7 +209,7 @@ export default function SettingsPage() {
                   onClick={() => updateTheme(opt.value)}
                   className={`flex flex-col items-center gap-1.5 px-3 py-3 rounded-lg border text-sm font-medium transition-colors ${
                     active
-                      ? "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300"
+                      ? "bg-slate-50 dark:bg-emerald-900/30 border-slate-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300"
                       : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
                   }`}
                   aria-pressed={active}
@@ -222,7 +222,7 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        <section className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-700 p-6">
+        <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
             Account
           </h2>
@@ -264,9 +264,9 @@ function Toggle({
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
-        className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors mt-0.5 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 ${
+        className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors mt-0.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${
           checked
-            ? "bg-emerald-500"
+            ? "bg-emerald-600"
             : "bg-slate-300 dark:bg-slate-700"
         }`}
       >

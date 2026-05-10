@@ -56,14 +56,14 @@ export default function AddRecipe() {
   };
 
   const inputClasses =
-    "w-full px-3 py-2 bg-white dark:bg-slate-900 border border-emerald-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent";
+    "w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent";
 
   return (
     <AuthGate>
       <div className="max-w-2xl mx-auto">
         <button
           onClick={() => router.back()}
-          className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 text-sm font-medium mb-4 inline-flex items-center gap-1"
+          className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 text-sm font-medium mb-4 inline-flex items-center gap-1"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -71,7 +71,7 @@ export default function AddRecipe() {
           Back
         </button>
 
-        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-emerald-100 dark:border-slate-700 p-6">
+        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6">Add Recipe</h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -131,10 +131,10 @@ export default function AddRecipe() {
             </div>
 
             <div className="pt-4 flex gap-3">
-              <button type="submit" disabled={saving} className="flex-1 bg-emerald-500 text-white py-3 rounded-lg font-semibold hover:bg-emerald-600 transition-colors disabled:opacity-50">
+              <button type="submit" disabled={saving} className="flex-1 bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-50">
                 {saving ? "Saving..." : "Save Recipe"}
               </button>
-              <button type="button" onClick={() => router.back()} className="px-6 py-3 border border-emerald-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-lg font-medium hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors">
+              <button type="button" onClick={() => router.back()} className="px-6 py-3 border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                 Cancel
               </button>
             </div>

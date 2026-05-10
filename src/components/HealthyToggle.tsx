@@ -73,7 +73,7 @@ export default function HealthyToggle({
   };
 
   return (
-    <div className="border-t border-emerald-100 dark:border-slate-700 pt-4">
+    <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
       <button
         onClick={fetchSuggestions}
         className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -121,7 +121,7 @@ export default function HealthyToggle({
                   className={`w-full text-left p-3 rounded-lg border transition-colors ${
                     selected.has(i)
                       ? "bg-green-50 dark:bg-green-950/40 border-green-300 dark:border-green-700"
-                      : "bg-white dark:bg-slate-900 border-emerald-100 dark:border-slate-700 hover:border-green-200 dark:hover:border-green-700"
+                      : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 hover:border-green-200 dark:hover:border-green-700"
                   }`}
                 >
                   <div className="flex items-start gap-3">

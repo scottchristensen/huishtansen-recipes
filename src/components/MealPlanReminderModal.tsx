@@ -87,7 +87,7 @@ export default function MealPlanReminderModal({
         <div className="flex items-start gap-3 mb-4">
           <div className="bg-emerald-100 dark:bg-emerald-900/40 rounded-full p-2 shrink-0">
             <svg
-              className="w-5 h-5 text-emerald-600 dark:text-emerald-400"
+              className="w-5 h-5 text-emerald-700 dark:text-emerald-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -112,7 +112,7 @@ export default function MealPlanReminderModal({
 
         {loading ? (
           <div className="flex justify-center py-8">
-            <div className="w-6 h-6 border-4 border-emerald-300 dark:border-emerald-700 border-t-emerald-600 rounded-full animate-spin" />
+            <div className="w-6 h-6 border-4 border-slate-300 dark:border-emerald-700 border-t-emerald-600 rounded-full animate-spin" />
           </div>
         ) : (
           <div className="space-y-4">
@@ -130,7 +130,7 @@ export default function MealPlanReminderModal({
                 onClick={() => setEnabled((v) => !v)}
                 className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors ${
                   enabled
-                    ? "bg-emerald-500"
+                    ? "bg-emerald-600"
                     : "bg-slate-300 dark:bg-slate-700"
                 }`}
                 aria-pressed={enabled}
@@ -152,7 +152,7 @@ export default function MealPlanReminderModal({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
 
@@ -164,7 +164,7 @@ export default function MealPlanReminderModal({
                 <select
                   value={dayOfWeek}
                   onChange={(e) => setDayOfWeek(parseInt(e.target.value, 10))}
-                  className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                  className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   {DAYS_OF_WEEK.map((d) => (
                     <option key={d.value} value={d.value}>
@@ -181,7 +181,7 @@ export default function MealPlanReminderModal({
                   type="time"
                   value={timeOfDay}
                   onChange={(e) => setTimeOfDay(e.target.value)}
-                  className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                  className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
             </div>
@@ -204,7 +204,7 @@ export default function MealPlanReminderModal({
           <button
             onClick={handleSave}
             disabled={saving || loading || !email}
-            className="px-4 py-2 text-sm font-semibold text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors disabled:opacity-50"
+            className="px-4 py-2 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors disabled:opacity-50"
           >
             {savedToast ? "Saved!" : saving ? "Saving..." : "Save"}
           </button>

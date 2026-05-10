@@ -134,9 +134,9 @@ export default function SelectionActionBar({
       )}
 
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-2rem)] max-w-2xl">
-        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-emerald-200 dark:border-slate-700 px-4 py-3 flex items-center gap-3">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-300 dark:border-slate-700 px-4 py-3 flex items-center gap-3">
           <div className="flex items-center gap-2 pr-3 border-r border-slate-200 dark:border-slate-700">
-            <span className="bg-emerald-500 text-white text-xs font-bold w-6 h-6 rounded-full inline-flex items-center justify-center">
+            <span className="bg-emerald-600 text-white text-xs font-bold w-6 h-6 rounded-full inline-flex items-center justify-center">
               {count}
             </span>
             <span className="text-sm text-slate-600 dark:text-slate-300">selected</span>
@@ -146,7 +146,7 @@ export default function SelectionActionBar({
             <button
               onClick={handleAddToMealPlan}
               disabled={busy}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-emerald-50 dark:hover:bg-slate-800 rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
             >
               <svg
                 className="w-4 h-4"
@@ -167,7 +167,7 @@ export default function SelectionActionBar({
             <button
               onClick={handleShare}
               disabled={busy}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-emerald-50 dark:hover:bg-slate-800 rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
             >
               <svg
                 className="w-4 h-4"

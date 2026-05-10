@@ -51,7 +51,7 @@ export default function RecipeDetail() {
     return (
       <AuthGate>
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-4 border-emerald-300 dark:border-emerald-700 border-t-emerald-600 rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-slate-300 dark:border-emerald-700 border-t-emerald-600 rounded-full animate-spin" />
         </div>
       </AuthGate>
     );
@@ -65,7 +65,7 @@ export default function RecipeDetail() {
           <p className="text-slate-400 dark:text-slate-500 text-lg">Recipe not found</p>
           <a
             href="/"
-            className="text-emerald-600 dark:text-emerald-400 hover:underline mt-2 inline-block"
+            className="text-emerald-700 dark:text-emerald-400 hover:underline mt-2 inline-block"
           >
             Back to recipes
           </a>
@@ -158,7 +158,7 @@ export default function RecipeDetail() {
 
 
   const inputClasses =
-    "w-full px-3 py-2 bg-white dark:bg-slate-900 border border-emerald-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent";
+    "w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent";
 
   return (
     <AuthGate>
@@ -166,7 +166,7 @@ export default function RecipeDetail() {
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={() => router.back()}
-            className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 text-sm font-medium inline-flex items-center gap-1"
+            className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 text-sm font-medium inline-flex items-center gap-1"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -175,14 +175,14 @@ export default function RecipeDetail() {
           </button>
           <a
             href={`/cook?recipe=${recipe.id}`}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-semibold hover:bg-emerald-600 transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 transition-colors"
           >
             <span>👨‍🍳</span>
             Start Cooking
           </a>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-emerald-100 dark:border-slate-700 overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
           <div className="aspect-[2/1] relative overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
             {recipe.photo ? (
               <>
@@ -233,7 +233,7 @@ export default function RecipeDetail() {
                 }`}
               >
                 <div className="text-5xl">🍽️</div>
-                <div className="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                <div className="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700 dark:text-emerald-400">
                   <svg
                     className="w-4 h-4"
                     fill="none"
@@ -302,12 +302,12 @@ export default function RecipeDetail() {
                 {(isRecipeNew(recipe.created_at) || recipe.tags.length > 0) && (
                   <div className="mt-3 flex flex-wrap gap-2">
                     {isRecipeNew(recipe.created_at) && (
-                      <span className="text-xs font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full bg-emerald-500 text-white">
+                      <span className="text-xs font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full bg-emerald-600 text-white">
                         New
                       </span>
                     )}
                     {recipe.tags.map((tag) => (
-                      <span key={tag} className="text-xs bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 px-2.5 py-1 rounded-full">{tag}</span>
+                      <span key={tag} className="text-xs bg-slate-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 px-2.5 py-1 rounded-full">{tag}</span>
                     ))}
                   </div>
                 )}
@@ -320,7 +320,7 @@ export default function RecipeDetail() {
               {editing ? (
                 <textarea rows={8} value={editForm.ingredients || ""} onChange={(e) => updateEdit("ingredients", e.target.value)} className={inputClasses} />
               ) : (
-                <div className="text-slate-700 dark:text-slate-200 text-sm leading-relaxed whitespace-pre-line bg-emerald-50/50 dark:bg-slate-800/50 rounded-lg p-4">{recipe.ingredients}</div>
+                <div className="text-slate-700 dark:text-slate-200 text-sm leading-relaxed whitespace-pre-line bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4">{recipe.ingredients}</div>
               )}
             </div>
 
@@ -360,10 +360,10 @@ export default function RecipeDetail() {
 
             {/* Photo upload section */}
             {!editing && (
-              <div className="border-t border-emerald-100 dark:border-slate-700 pt-4">
+              <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200">My Attempt Photos</h3>
-                  <label className={`text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium cursor-pointer ${uploadingPhoto ? "opacity-50" : ""}`}>
+                  <label className={`text-sm text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium cursor-pointer ${uploadingPhoto ? "opacity-50" : ""}`}>
                     {uploadingPhoto ? "Uploading..." : "+ Add Photo"}
                     <input type="file" accept="image/*" multiple capture="environment" onChange={handlePhotoUpload} className="hidden" disabled={uploadingPhoto} />
                   </label>
@@ -381,7 +381,7 @@ export default function RecipeDetail() {
                     ))}
                   </div>
                 ) : (
-                  <label className="block border-2 border-dashed border-emerald-200 dark:border-slate-700 rounded-lg p-6 text-center cursor-pointer hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors">
+                  <label className="block border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-6 text-center cursor-pointer hover:border-slate-300 dark:hover:border-slate-300 transition-colors">
                     <div className="text-2xl mb-1">📸</div>
                     <p className="text-sm text-slate-400 dark:text-slate-500">Tap to upload photos of your attempts</p>
                     <input type="file" accept="image/*" multiple capture="environment" onChange={handlePhotoUpload} className="hidden" />
@@ -392,7 +392,7 @@ export default function RecipeDetail() {
 
             {/* Notes section */}
             {!editing && (
-              <div className="border-t border-emerald-100 dark:border-slate-700 pt-4">
+              <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
                 <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Notes</h3>
                 <textarea
                   rows={3}
@@ -400,16 +400,16 @@ export default function RecipeDetail() {
                   onChange={(e) => setNotes(e.target.value)}
                   onBlur={handleNotesBlur}
                   placeholder="Add notes about this recipe... (saves automatically)"
-                  className="w-full px-3 py-2 bg-emerald-50/50 dark:bg-slate-800/50 border border-emerald-100 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
                 />
               </div>
             )}
 
             {/* Link + actions */}
-            <div className="pt-2 border-t border-emerald-100 dark:border-slate-700 flex items-center justify-between">
+            <div className="pt-2 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
               <div>
                 {recipe.link && !editing && (
-                  <a href={recipe.link} target="_blank" rel="noopener noreferrer" className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 text-sm font-medium inline-flex items-center gap-1">
+                  <a href={recipe.link} target="_blank" rel="noopener noreferrer" className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 text-sm font-medium inline-flex items-center gap-1">
                     View original recipe
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -420,12 +420,12 @@ export default function RecipeDetail() {
               <div className="flex items-center gap-2">
                 {editing ? (
                   <>
-                    <button onClick={handleSaveEdit} className="px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-medium hover:bg-emerald-600 transition-colors">Save Changes</button>
-                    <button onClick={() => setEditing(false)} className="px-4 py-2 border border-emerald-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-sm font-medium hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors">Cancel</button>
+                    <button onClick={handleSaveEdit} className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors">Save Changes</button>
+                    <button onClick={() => setEditing(false)} className="px-4 py-2 border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Cancel</button>
                   </>
                 ) : (
                   <>
-                    <button onClick={startEditing} className="px-4 py-2 border border-emerald-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-sm font-medium hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors">Edit</button>
+                    <button onClick={startEditing} className="px-4 py-2 border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Edit</button>
                     <button onClick={() => setShowDeleteConfirm(true)} className="px-4 py-2 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-lg text-sm font-medium hover:bg-red-50 dark:hover:bg-red-950/60 transition-colors">Delete</button>
                   </>
                 )}

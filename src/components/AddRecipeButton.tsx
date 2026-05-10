@@ -22,24 +22,16 @@ export default function AddRecipeButton() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-500 text-white rounded-lg font-semibold text-sm hover:bg-emerald-600 transition-colors"
+        className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg font-semibold text-sm hover:bg-emerald-700 transition-colors"
       >
         + Add Recipe
-        <svg
-          className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-900 border border-emerald-100 dark:border-slate-700 rounded-xl shadow-lg overflow-hidden z-30">
+        <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg overflow-hidden z-30">
           <a
             href="/add"
-            className="flex items-start gap-3 px-4 py-3 hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors"
+            className="flex items-start gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
           >
             <span className="text-lg">📝</span>
             <div>
@@ -53,7 +45,7 @@ export default function AddRecipeButton() {
           </a>
           <a
             href="/import"
-            className="flex items-start gap-3 px-4 py-3 hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors border-t border-emerald-100 dark:border-slate-700"
+            className="flex items-start gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border-t border-slate-200 dark:border-slate-700"
           >
             <span className="text-lg">🔗</span>
             <div>

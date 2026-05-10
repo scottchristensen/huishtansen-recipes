@@ -40,7 +40,7 @@ export default function PhotoUpload({ photos, onPhotosChange }: PhotoUploadProps
           type="button"
           onClick={() => fileRef.current?.click()}
           disabled={uploading}
-          className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium disabled:opacity-50"
+          className="text-sm text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium disabled:opacity-50"
         >
           {uploading ? "Processing..." : "+ Add Photo"}
         </button>
@@ -78,7 +78,7 @@ export default function PhotoUpload({ photos, onPhotosChange }: PhotoUploadProps
       ) : (
         <div
           onClick={() => fileRef.current?.click()}
-          className="border-2 border-dashed border-emerald-200 dark:border-slate-700 rounded-lg p-6 text-center cursor-pointer hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors"
+          className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-6 text-center cursor-pointer hover:border-slate-300 dark:hover:border-slate-300 transition-colors"
         >
           <div className="text-2xl mb-1">📸</div>
           <p className="text-sm text-slate-400 dark:text-slate-500">

@@ -79,7 +79,7 @@ export default function ChefProfilePage() {
     return (
       <AuthGate>
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-4 border-emerald-300 dark:border-emerald-700 border-t-emerald-600 rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-slate-300 dark:border-emerald-700 border-t-emerald-600 rounded-full animate-spin" />
         </div>
       </AuthGate>
     );
@@ -182,15 +182,15 @@ export default function ChefProfilePage() {
   const tabClasses = (tab: string) =>
     `px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
       activeTab === tab
-        ? "bg-emerald-500 text-white"
-        : "text-slate-500 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-slate-800"
+        ? "bg-emerald-600 text-white"
+        : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
     }`;
 
   return (
     <AuthGate>
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Profile header */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-emerald-100 dark:border-slate-700 p-6 text-center">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 text-center">
           <div className="flex justify-center mb-3 relative group">
             <ChefAvatar
               name={profile.name}
@@ -237,7 +237,7 @@ export default function ChefProfilePage() {
           {/* Quick stats row */}
           <div className="flex justify-center gap-6 mt-5">
             <div className="text-center">
-              <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+              <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-400">
                 {chefRecipes.length}
               </div>
               <div className="text-xs text-slate-400 dark:text-slate-500">Recipes</div>
@@ -257,7 +257,7 @@ export default function ChefProfilePage() {
           {/* Badges */}
           <div className="flex flex-wrap justify-center gap-2 mt-4">
             {profile.favorite_cuisine && (
-              <span className="text-xs bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 px-3 py-1 rounded-full">
+              <span className="text-xs bg-slate-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 px-3 py-1 rounded-full">
                 Loves {profile.favorite_cuisine}
               </span>
             )}
@@ -325,7 +325,7 @@ export default function ChefProfilePage() {
           <div className="space-y-4">
             {/* Signature dish */}
             {signatureDish && (
-              <div className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-700 p-4">
+              <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
                 <h3 className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
                   Signature Dish
                 </h3>
@@ -351,7 +351,7 @@ export default function ChefProfilePage() {
                     )}
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-900 dark:text-slate-100 group-hover:text-emerald-600 transition-colors">
+                    <p className="font-semibold text-slate-900 dark:text-slate-100 group-hover:text-emerald-700 transition-colors">
                       {signatureDish.name}
                     </p>
                     <p className="text-xs text-slate-400 dark:text-slate-500">
@@ -363,7 +363,7 @@ export default function ChefProfilePage() {
             )}
 
             {/* Type breakdown */}
-            <div className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-700 p-4">
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
               <h3 className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">
                 Recipe Types
               </h3>
@@ -378,7 +378,7 @@ export default function ChefProfilePage() {
                       <span className="text-sm text-slate-700 dark:text-slate-200 w-32">
                         {type}
                       </span>
-                      <div className="flex-1 bg-emerald-50 dark:bg-slate-800 rounded-full h-4 overflow-hidden">
+                      <div className="flex-1 bg-slate-50 dark:bg-slate-800 rounded-full h-4 overflow-hidden">
                         <div
                           className="bg-emerald-400 h-full rounded-full transition-all"
                           style={{
@@ -395,7 +395,7 @@ export default function ChefProfilePage() {
             </div>
 
             {/* Difficulty breakdown */}
-            <div className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-700 p-4">
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
               <h3 className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">
                 Difficulty Spread
               </h3>
@@ -422,7 +422,7 @@ export default function ChefProfilePage() {
 
             {/* Top ingredients */}
             {topIngredients.length > 0 && (
-              <div className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-700 p-4">
+              <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
                 <h3 className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">
                   Go-To Ingredients
                 </h3>
@@ -430,7 +430,7 @@ export default function ChefProfilePage() {
                   {topIngredients.map((word) => (
                     <span
                       key={word}
-                      className="text-sm bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 px-3 py-1.5 rounded-full capitalize"
+                      className="text-sm bg-slate-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 px-3 py-1.5 rounded-full capitalize"
                     >
                       {word}
                     </span>
@@ -449,7 +449,7 @@ export default function ChefProfilePage() {
                 <p className="text-slate-400 dark:text-slate-500">No meals planned this week</p>
                 <a
                   href="/meal-plan"
-                  className="text-emerald-600 dark:text-emerald-400 hover:underline text-sm mt-2 inline-block"
+                  className="text-emerald-700 dark:text-emerald-400 hover:underline text-sm mt-2 inline-block"
                 >
                   Go plan some meals
                 </a>
@@ -460,7 +460,7 @@ export default function ChefProfilePage() {
                 return (
                   <div
                     key={day.day}
-                    className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-700 p-3"
+                    className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-3"
                   >
                     <h4 className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
                       {day.day}
@@ -493,7 +493,7 @@ export default function ChefProfilePage() {
                               </div>
                             )}
                           </div>
-                          <span className="text-sm text-slate-700 dark:text-slate-200 group-hover:text-emerald-600 transition-colors">
+                          <span className="text-sm text-slate-700 dark:text-slate-200 group-hover:text-emerald-700 transition-colors">
                             {recipe.name}
                           </span>
                         </a>

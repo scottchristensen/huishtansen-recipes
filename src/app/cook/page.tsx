@@ -116,7 +116,7 @@ export default function CookPage() {
 function CookFallback() {
   return (
     <div className="flex justify-center py-12">
-      <div className="w-8 h-8 border-4 border-emerald-300 dark:border-emerald-700 border-t-emerald-600 rounded-full animate-spin" />
+      <div className="w-8 h-8 border-4 border-slate-300 dark:border-emerald-700 border-t-emerald-600 rounded-full animate-spin" />
     </div>
   );
 }
@@ -348,7 +348,7 @@ function CookInner() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-wider font-medium text-emerald-600 dark:text-emerald-400 mb-1">
+            <p className="text-xs uppercase tracking-wider font-medium text-emerald-700 dark:text-emerald-400 mb-1">
               {recipe.source === "guess"
                 ? `Cooking now ${guess ? `· ${guess.day} ${SLOT_LABEL[guess.slot]}` : ""}`
                 : recipe.source === "saved"
@@ -378,7 +378,7 @@ function CookInner() {
         </div>
 
         {recipe.photo && (
-          <div className="bg-white dark:bg-slate-900 border border-emerald-100 dark:border-slate-700 rounded-xl overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={recipe.photo}
@@ -389,14 +389,14 @@ function CookInner() {
               }}
             />
             {recipe.photos && recipe.photos.length > 1 && (
-              <div className="flex gap-2 p-2 overflow-x-auto bg-emerald-50/50 dark:bg-slate-800/50 border-t border-emerald-100 dark:border-slate-700">
+              <div className="flex gap-2 p-2 overflow-x-auto bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700">
                 {recipe.photos.map((src, i) => (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
                     key={`${src}-${i}`}
                     src={src}
                     alt=""
-                    className="h-16 w-24 rounded-md object-cover shrink-0 border border-emerald-100 dark:border-slate-700"
+                    className="h-16 w-24 rounded-md object-cover shrink-0 border border-slate-200 dark:border-slate-700"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = "none";
                     }}
@@ -408,7 +408,7 @@ function CookInner() {
         )}
 
         {timers.length > 0 && (
-          <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl p-3">
+          <div className="bg-slate-50 dark:bg-emerald-950/40 border border-slate-300 dark:border-emerald-800 rounded-xl p-3">
             <p className="text-xs font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 mb-2">
               Active Timers
             </p>
@@ -422,7 +422,7 @@ function CookInner() {
                     className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
                       done
                         ? "bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-700 animate-pulse"
-                        : "bg-white dark:bg-slate-900 border-emerald-200 dark:border-slate-700"
+                        : "bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700"
                     }`}
                   >
                     <span className="text-base">{done ? "🔔" : "⏱"}</span>
@@ -467,7 +467,7 @@ function CookInner() {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">
-          <aside className="bg-white dark:bg-slate-900 border border-emerald-100 dark:border-slate-700 rounded-xl p-5 h-fit lg:sticky lg:top-4">
+          <aside className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-5 h-fit lg:sticky lg:top-4">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-3">
               Ingredients
             </h2>
@@ -478,7 +478,7 @@ function CookInner() {
             </ul>
           </aside>
 
-          <section className="bg-white dark:bg-slate-900 border border-emerald-100 dark:border-slate-700 rounded-xl p-5">
+          <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-3">
               Instructions
             </h2>
@@ -498,7 +498,7 @@ function CookInner() {
                       <img
                         src={recipe.stepImages[step.index - 1]}
                         alt={`Step ${step.index}`}
-                        className="mt-2 rounded-lg max-h-56 w-full object-cover border border-emerald-100 dark:border-slate-700"
+                        className="mt-2 rounded-lg max-h-56 w-full object-cover border border-slate-200 dark:border-slate-700"
                         onError={(e) => {
                           (e.target as HTMLImageElement).style.display = "none";
                         }}
@@ -515,7 +515,7 @@ function CookInner() {
                                 tc.ms
                               )
                             }
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-500 text-white text-xs font-medium hover:bg-emerald-600 transition-colors"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-600 text-white text-xs font-medium hover:bg-emerald-700 transition-colors"
                           >
                             <svg
                               className="w-3.5 h-3.5"
@@ -551,7 +551,7 @@ function CookInner() {
       </div>
 
       {guess && (
-        <div className="bg-white dark:bg-slate-900 border border-emerald-200 dark:border-slate-700 rounded-xl p-5">
+        <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-5">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-xl">{SLOT_ICON[guess.slot]}</span>
             <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
@@ -564,7 +564,7 @@ function CookInner() {
               <button
                 key={r.id}
                 onClick={() => pickGuess(r)}
-                className="w-full flex items-center gap-3 p-3 rounded-lg border border-emerald-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors text-left"
+                className="w-full flex items-center gap-3 p-3 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
               >
                 <div className="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 overflow-hidden shrink-0">
                   {r.photo ? (
@@ -591,7 +591,7 @@ function CookInner() {
                     {r.chef} · {r.time}
                   </div>
                 </div>
-                <span className="px-3 py-1.5 bg-emerald-500 text-white text-xs font-semibold rounded-lg">
+                <span className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg">
                   Start cooking
                 </span>
               </button>
@@ -600,7 +600,7 @@ function CookInner() {
         </div>
       )}
 
-      <div className="bg-white dark:bg-slate-900 border border-emerald-100 dark:border-slate-700 rounded-xl p-5">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
         <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
           Cook from a recipe URL
         </h2>
@@ -617,12 +617,12 @@ function CookInner() {
               if (e.key === "Enter") loadFromUrl();
             }}
             placeholder="https://..."
-            className="flex-1 px-3 py-2 bg-emerald-50 dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+            className="flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
           />
           <button
             onClick={loadFromUrl}
             disabled={!url || loading}
-            className="px-4 py-2 bg-emerald-500 text-white rounded-lg font-semibold text-sm hover:bg-emerald-600 transition-colors disabled:opacity-50"
+            className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-semibold text-sm hover:bg-emerald-700 transition-colors disabled:opacity-50"
           >
             {loading ? "Loading..." : "Cook"}
           </button>

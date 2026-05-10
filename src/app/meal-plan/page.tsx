@@ -30,7 +30,13 @@ import { useAuth } from "@/lib/auth-context";
 import AuthGate from "@/components/AuthGate";
 import ChefAvatar from "@/components/ChefAvatar";
 import MealPlanReminderModal from "@/components/MealPlanReminderModal";
-import MealPlanKanban, { PendingTray } from "@/components/MealPlanKanban";
+import MealPlanKanban, {
+  PendingTray,
+  SuggestionsTray,
+  type KanbanLayout,
+} from "@/components/MealPlanKanban";
+
+const LAYOUT_KEY = "huish-meal-plan-layout";
 
 type AddingTarget = { day: string; slot: MealSlot } | null;
 
@@ -51,11 +57,20 @@ export default function MealPlanPage() {
   const [showReminderModal, setShowReminderModal] = useState(false);
   const [reminderEnabled, setReminderEnabled] = useState(false);
   const [pendingIds, setPendingIds] = useState<string[]>([]);
+  const [planLayout, setPlanLayout] = useState<KanbanLayout>("kanban");
 
-  // Pull recipes the user multi-selected from the recipes table.
+  // Pull recipes the user multi-selected from the recipes table + restore
+  // the user's preferred layout.
   useEffect(() => {
     setPendingIds(getPendingMealPlanRecipes());
+    const saved = localStorage.getItem(LAYOUT_KEY);
+    if (saved === "kanban" || saved === "list") setPlanLayout(saved);
   }, []);
+
+  const switchLayout = (next: KanbanLayout) => {
+    setPlanLayout(next);
+    localStorage.setItem(LAYOUT_KEY, next);
+  };
 
   const weekStart = useMemo(() => getCurrentWeekStart(), []);
   const weekRange = useMemo(() => {
@@ -116,6 +131,21 @@ export default function MealPlanPage() {
     }
     return { plannedChefCounts: chefs, plannedTypeCounts: types };
   }, [plannedRecipeIds, recipesById]);
+
+  const suggestions = useMemo(() => {
+    if (recipes.length === 0) return [];
+    const planned = new Set(plannedRecipeIds);
+    const candidates = recipes.filter((r) => !planned.has(r.id));
+    return candidates
+      .map((r) => {
+        const chefPenalty = (plannedChefCounts[r.chef] || 0) * 2;
+        const typePenalty = plannedTypeCounts[r.type] || 0;
+        return { recipe: r, score: -(chefPenalty + typePenalty) };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 8)
+      .map((s) => s.recipe);
+  }, [recipes, plannedRecipeIds, plannedChefCounts, plannedTypeCounts]);
 
   const pendingRecipes = useMemo(
     () =>
@@ -235,7 +265,7 @@ export default function MealPlanPage() {
       <AuthGate>
         <div className="space-y-6">
           <div className="flex justify-center py-12">
-            <div className="w-8 h-8 border-4 border-emerald-300 dark:border-emerald-700 border-t-emerald-600 rounded-full animate-spin" />
+            <div className="w-8 h-8 border-4 border-slate-300 dark:border-emerald-700 border-t-emerald-600 rounded-full animate-spin" />
           </div>
         </div>
       </AuthGate>
@@ -245,8 +275,8 @@ export default function MealPlanPage() {
   const tabClasses = (tab: string) =>
     `px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
       view === tab
-        ? "bg-emerald-500 text-white"
-        : "text-slate-500 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-slate-800"
+        ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-sm"
+        : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
     }`;
 
   return (
@@ -266,7 +296,7 @@ export default function MealPlanPage() {
               onClick={() => setShowReminderModal(true)}
               className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${
                 reminderEnabled
-                  ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
+                  ? "border-slate-300 dark:border-emerald-700 bg-slate-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
                   : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
               }`}
             >
@@ -306,41 +336,96 @@ export default function MealPlanPage() {
                   )}
                 </button>
               </div>
-              {view === "mine" && totalMeals > 0 && (
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleGenerateGroceryList}
-                    className="px-3 py-2 bg-emerald-500 text-white rounded-lg text-sm font-semibold hover:bg-emerald-600 transition-colors"
-                  >
-                    Grocery List
-                  </button>
-                  <button
-                    onClick={handleClearPlan}
-                    className="px-3 py-2 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                  >
-                    Clear
-                  </button>
+              {view === "mine" && (
+                <div className="flex items-center gap-2">
+                  <div className="inline-flex rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 p-0.5">
+                    <button
+                      onClick={() => switchLayout("kanban")}
+                      className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors inline-flex items-center gap-1 ${
+                        planLayout === "kanban"
+                          ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
+                          : "text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400"
+                      }`}
+                      title="Kanban view"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h4v14H4zM10 6h4v14h-4zM16 6h4v14h-4z" />
+                      </svg>
+                      Kanban
+                    </button>
+                    <button
+                      onClick={() => switchLayout("list")}
+                      className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors inline-flex items-center gap-1 ${
+                        planLayout === "list"
+                          ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
+                          : "text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400"
+                      }`}
+                      title="List view"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                      </svg>
+                      List
+                    </button>
+                  </div>
+                  {totalMeals > 0 && (
+                    <>
+                      <button
+                        onClick={handleGenerateGroceryList}
+                        className="px-3 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 transition-colors"
+                      >
+                        Grocery List
+                      </button>
+                      <button
+                        onClick={handleClearPlan}
+                        className="px-3 py-2 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                      >
+                        Clear
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
             </div>
 
             {view === "mine" && (
               <div className="space-y-4">
-                <PendingTray
-                  pending={pendingRecipes}
-                  onClear={handleClearPending}
-                  onRemove={removeFromPending}
-                />
-                <MealPlanKanban
-                  plan={myPlan}
-                  recipesById={recipesById}
-                  onDrop={handleKanbanDrop}
-                  onRemove={handleRemoveRecipe}
-                  onAddClick={(day, slot) => {
-                    setAdding({ day, slot });
-                    setSearchQuery("");
-                  }}
-                />
+                {pendingRecipes.length > 0 ? (
+                  <PendingTray
+                    pending={pendingRecipes}
+                    onClear={handleClearPending}
+                    onRemove={removeFromPending}
+                  />
+                ) : (
+                  <SuggestionsTray suggestions={suggestions} />
+                )}
+                {planLayout === "kanban" ? (
+                  <div className="relative w-screen left-1/2 -translate-x-1/2 px-4">
+                    <MealPlanKanban
+                      plan={myPlan}
+                      recipesById={recipesById}
+                      layout="kanban"
+                      onDrop={handleKanbanDrop}
+                      onRemove={handleRemoveRecipe}
+                      onAddClick={(day, slot) => {
+                        setAdding({ day, slot });
+                        setSearchQuery("");
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <MealPlanKanban
+                    plan={myPlan}
+                    recipesById={recipesById}
+                    layout="list"
+                    onDrop={handleKanbanDrop}
+                    onRemove={handleRemoveRecipe}
+                    onAddClick={(day, slot) => {
+                      setAdding({ day, slot });
+                      setSearchQuery("");
+                    }}
+                  />
+                )}
               </div>
             )}
 
@@ -382,7 +467,7 @@ export default function MealPlanPage() {
                           {plannedDays.map((day) => (
                             <div
                               key={day.day}
-                              className="bg-white dark:bg-slate-900 rounded-lg border border-emerald-100 dark:border-slate-700 p-3"
+                              className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-3"
                             >
                               <h4 className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">
                                 {day.day}
@@ -400,7 +485,7 @@ export default function MealPlanPage() {
                                         <a
                                           key={`${id}-${idx}`}
                                           href={`/recipe/${recipe.id}`}
-                                          className="flex items-center gap-2 py-1 text-sm text-slate-700 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors ml-4"
+                                          className="flex items-center gap-2 py-1 text-sm text-slate-700 dark:text-slate-200 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors ml-4"
                                         >
                                           <span>🍽️</span>
                                           {recipe.name}
@@ -424,7 +509,7 @@ export default function MealPlanPage() {
 
         {adding && (
           <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/50 p-4">
-            <div className="bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-5 w-full max-w-md">
+            <div className="bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 w-full max-w-2xl max-h-[85vh] flex flex-col">
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <p className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
@@ -492,7 +577,7 @@ export default function MealPlanPage() {
         {showGroceryList && (
           <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
             <div className="bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl w-full max-w-lg max-h-[80vh] flex flex-col">
-              <div className="px-6 py-4 border-b border-emerald-100 dark:border-slate-700 flex items-center justify-between shrink-0">
+              <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between shrink-0">
                 <div>
                   <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
                     Grocery List
@@ -521,7 +606,7 @@ export default function MealPlanPage() {
                       <button
                         key={i}
                         onClick={() => toggleGroceryItem(i)}
-                        className="w-full text-left flex items-start gap-3 py-2 px-1 rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors"
+                        className="w-full text-left flex items-start gap-3 py-2 px-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                       >
                         <div
                           className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${
@@ -550,7 +635,7 @@ export default function MealPlanPage() {
                   </div>
                 )}
               </div>
-              <div className="px-6 py-4 border-t border-emerald-100 dark:border-slate-700 shrink-0">
+              <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-700 shrink-0">
                 <button
                   onClick={() => {
                     const unchecked = groceryItems
@@ -559,7 +644,7 @@ export default function MealPlanPage() {
                       .join("\n");
                     navigator.clipboard.writeText(unchecked);
                   }}
-                  className="w-full py-3 bg-emerald-500 text-white rounded-lg font-semibold text-sm hover:bg-emerald-600 transition-colors"
+                  className="w-full py-3 bg-emerald-600 text-white rounded-lg font-semibold text-sm hover:bg-emerald-700 transition-colors"
                 >
                   Copy to Clipboard
                 </button>
@@ -599,9 +684,33 @@ function SlotPicker({
   );
 
   return (
-    <div className="mt-2 space-y-2">
+    <div className="mt-3 flex flex-col gap-3 flex-1 min-h-0">
+      <div className="relative shrink-0">
+        <svg
+          className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-500 pointer-events-none"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search all recipes by name, chef, or ingredient…"
+          autoFocus
+          className="w-full pl-10 pr-3 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        />
+      </div>
+
       {!searchQuery && suggestions.length > 0 && (
-        <div>
+        <div className="shrink-0">
           <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">
             Suggested for variety
           </p>
@@ -610,35 +719,57 @@ function SlotPicker({
               <button
                 key={r.id}
                 onClick={() => onPick(r.id)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-50 dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
               >
                 <span className="text-sm">✨</span>
-                <span className="truncate max-w-[140px]">{r.name}</span>
+                <span className="truncate max-w-[160px]">{r.name}</span>
                 <span className="text-slate-400 dark:text-slate-500">· {r.chef}</span>
               </button>
             ))}
           </div>
         </div>
       )}
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Search all recipes..."
-        autoFocus
-        className="w-full px-3 py-2 bg-emerald-50 dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-      />
-      <div className="max-h-48 overflow-y-auto space-y-1">
-        {filteredRecipes.slice(0, 12).map((recipe) => (
-          <button
-            key={recipe.id}
-            onClick={() => onPick(recipe.id)}
-            className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2"
-          >
-            <span className="text-sm text-slate-700 dark:text-slate-200 truncate flex-1">{recipe.name}</span>
-            <span className="text-xs text-slate-400 dark:text-slate-500 shrink-0">{recipe.type}</span>
-          </button>
-        ))}
+
+      <div className="flex-1 min-h-0 overflow-y-auto space-y-1 -mx-1 px-1">
+        {filteredRecipes.length === 0 ? (
+          <p className="text-sm text-slate-400 dark:text-slate-500 text-center py-6">
+            No recipes match
+          </p>
+        ) : (
+          filteredRecipes.slice(0, 30).map((recipe) => (
+            <button
+              key={recipe.id}
+              onClick={() => onPick(recipe.id)}
+              className="w-full text-left px-2 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-3"
+            >
+              <div className="w-9 h-9 rounded-md bg-slate-200 dark:bg-slate-700 overflow-hidden shrink-0">
+                {recipe.photo ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    src={recipe.photo}
+                    alt=""
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = "none";
+                    }}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-base text-slate-400 dark:text-slate-500">
+                    🍽️
+                  </div>
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">
+                  {recipe.name}
+                </p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 truncate">
+                  {recipe.chef} · {recipe.type}
+                </p>
+              </div>
+            </button>
+          ))
+        )}
       </div>
     </div>
   );

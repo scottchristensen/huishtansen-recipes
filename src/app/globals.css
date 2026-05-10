@@ -5,15 +5,15 @@
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
-  --accent: #059669;
-  --accent-dark: #047857;
+  --accent: #047857;
+  --accent-dark: #065f46;
 }
 
 .dark {
   --background: #020617;
   --foreground: #f1f5f9;
-  --accent: #10b981;
-  --accent-dark: #065f46;
+  --accent: #059669;
+  --accent-dark: #047857;
 }
 
 @theme inline {

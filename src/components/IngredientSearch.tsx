@@ -42,7 +42,7 @@ export default function IngredientSearch({ recipes }: IngredientSearchProps) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-900 border border-emerald-200 dark:border-slate-700 rounded-xl text-sm text-slate-600 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors w-full justify-center sm:w-auto"
+        className="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors w-full justify-center sm:w-auto"
       >
         <span>🧊</span>
         What can I make with...?
@@ -51,7 +51,7 @@ export default function IngredientSearch({ recipes }: IngredientSearchProps) {
   }
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-200 dark:border-slate-700 p-4 space-y-4">
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-300 dark:border-slate-700 p-4 space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
           <span>🧊</span>
@@ -77,7 +77,7 @@ export default function IngredientSearch({ recipes }: IngredientSearchProps) {
           onChange={(e) => setInput(e.target.value)}
           placeholder="chicken, rice, avocado..."
           autoFocus
-          className="flex-1 px-3 py-2.5 bg-emerald-50 dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent"
+          className="flex-1 px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
           onKeyDown={(e) => {
             if (e.key === "Enter") handleSearch();
           }}
@@ -85,7 +85,7 @@ export default function IngredientSearch({ recipes }: IngredientSearchProps) {
         <button
           onClick={handleSearch}
           disabled={!input.trim()}
-          className="px-5 py-2.5 bg-emerald-500 text-white rounded-lg font-semibold text-sm hover:bg-emerald-600 transition-colors disabled:opacity-50"
+          className="px-5 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold text-sm hover:bg-emerald-700 transition-colors disabled:opacity-50"
         >
           Search
         </button>

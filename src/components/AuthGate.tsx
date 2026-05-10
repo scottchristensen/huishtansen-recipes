@@ -26,7 +26,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-8 h-8 border-4 border-emerald-300 dark:border-emerald-700 border-t-emerald-600 rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-slate-300 dark:border-emerald-700 border-t-emerald-600 rounded-full animate-spin" />
       </div>
     );
   }
@@ -35,7 +35,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
   if (!session) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-emerald-100 dark:border-slate-700 p-8 w-full max-w-sm text-center">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-8 w-full max-w-sm text-center">
           <div className="text-5xl mb-4">🍳</div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-1">
             Huishtansen Eats
@@ -81,7 +81,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
   if (!profile || pickingName) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-emerald-100 dark:border-slate-700 p-8 w-full max-w-sm text-center">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-8 w-full max-w-sm text-center">
           <div className="text-5xl mb-4">👋</div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-1">
             Welcome, {user?.user_metadata?.full_name?.split(" ")[0] || "Chef"}!
@@ -106,7 +106,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                     setPickingName(false);
                   }
                 }}
-                className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-emerald-100 dark:hover:bg-slate-700 hover:border-emerald-300 dark:hover:border-emerald-600 transition-colors"
+                className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-300 transition-colors"
               >
                 <span className="text-lg">{member.emoji}</span>
                 {member.name}

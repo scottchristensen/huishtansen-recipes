@@ -49,12 +49,12 @@ export default function PersonPicker({ onSelect }: PersonPickerProps) {
             setCurrentUser("");
             setCurrent("");
           }}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-200 rounded-full text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-700 transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-full text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
         >
           <span>{member?.emoji || "🍴"}</span>
           {current}
           <svg
-            className="w-3.5 h-3.5 text-emerald-500"
+            className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -72,7 +72,7 @@ export default function PersonPicker({ onSelect }: PersonPickerProps) {
   }
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-700 p-5 text-center">
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-5 text-center">
       <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-1">Who&apos;s cooking?</h3>
       <p className="text-sm text-slate-400 dark:text-slate-500 mb-4">
         Pick your name to create and view meal plans
@@ -82,7 +82,7 @@ export default function PersonPicker({ onSelect }: PersonPickerProps) {
           <button
             key={member.name}
             onClick={() => handleSelect(member.name)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-emerald-100 dark:hover:bg-slate-700 hover:border-emerald-300 dark:hover:border-emerald-600 transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
           >
             <span className="text-lg">{member.emoji}</span>
             {member.name}
