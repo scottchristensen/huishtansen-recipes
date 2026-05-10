@@ -106,7 +106,7 @@ export default function RecipeTable({
         <table className="w-full text-sm">
           <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
             <tr>
-              <th className="px-3 py-3 w-12">
+              <th className="sticky left-0 z-20 px-3 py-3 w-12 bg-slate-50 dark:bg-slate-800">
                 <input
                   type="checkbox"
                   checked={allSelected}
@@ -118,7 +118,11 @@ export default function RecipeTable({
                   aria-label="Select all"
                 />
               </th>
-              <SortHeader label="Name" sortableKey="name" />
+              <SortHeader
+                label="Name"
+                sortableKey="name"
+                className="sticky left-12 z-20 bg-slate-50 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700"
+              />
               <SortHeader label="Chef" sortableKey="chef" />
               <SortHeader label="Type" sortableKey="type" />
               <SortHeader label="Difficulty" sortableKey="difficulty" />
@@ -128,14 +132,17 @@ export default function RecipeTable({
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {sorted.map((recipe) => {
               const isSelected = selectedIds.has(recipe.id);
+              const rowBg = isSelected
+                ? "bg-slate-50 dark:bg-slate-800"
+                : "bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800";
               return (
                 <tr
                   key={recipe.id}
-                  className={`group transition-colors ${
-                    isSelected ? "bg-slate-50 dark:bg-slate-800" : "hover:bg-slate-50"
-                  }`}
+                  className="group transition-colors"
                 >
-                  <td className="px-3 py-2 w-12">
+                  <td
+                    className={`sticky left-0 z-10 px-3 py-2 w-12 ${rowBg}`}
+                  >
                     <button
                       type="button"
                       onClick={() => onToggleSelect(recipe.id)}
@@ -186,8 +193,10 @@ export default function RecipeTable({
                       </span>
                     </button>
                   </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
+                  <td
+                    className={`sticky left-12 z-10 px-4 py-3 border-r border-slate-200 dark:border-slate-700 ${rowBg}`}
+                  >
+                    <div className="flex items-center gap-2 whitespace-nowrap">
                       <a
                         href={`/recipe/${recipe.id}`}
                         className="font-medium text-slate-900 dark:text-slate-100 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors"
@@ -201,7 +210,7 @@ export default function RecipeTable({
                       )}
                     </div>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className={`px-4 py-3 ${rowBg}`}>
                     <a
                       href={`/chef/${encodeURIComponent(recipe.chef)}`}
                       className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors"
@@ -210,17 +219,17 @@ export default function RecipeTable({
                       {recipe.chef}
                     </a>
                   </td>
-                  <td className="px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                  <td className={`px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap ${rowBg}`}>
                     {recipe.type}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
+                  <td className={`px-4 py-3 whitespace-nowrap ${rowBg}`}>
                     <span
                       className={`text-xs font-medium px-2 py-1 rounded-full ${difficultyColor[recipe.difficulty]}`}
                     >
                       {recipe.difficulty}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                  <td className={`px-4 py-3 text-slate-600 dark:text-slate-300 whitespace-nowrap ${rowBg}`}>
                     {recipe.time || "—"}
                   </td>
                 </tr>
