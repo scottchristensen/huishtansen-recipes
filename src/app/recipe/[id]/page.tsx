@@ -13,6 +13,7 @@ import {
   uploadCoverPhoto,
   isRecipeNew,
 } from "@/lib/recipes-store";
+import { splitIngredientLines } from "@/lib/ingredients";
 import AuthGate from "@/components/AuthGate";
 import HealthyToggle from "@/components/HealthyToggle";
 
@@ -162,7 +163,7 @@ export default function RecipeDetail() {
 
   return (
     <AuthGate>
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto pb-24 sm:pb-0">
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={() => router.back()}
@@ -175,7 +176,7 @@ export default function RecipeDetail() {
           </button>
           <a
             href={`/cook?recipe=${recipe.id}`}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 transition-colors"
+            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 transition-colors"
           >
             <span>👨‍🍳</span>
             Start Cooking
@@ -320,7 +321,11 @@ export default function RecipeDetail() {
               {editing ? (
                 <textarea rows={8} value={editForm.ingredients || ""} onChange={(e) => updateEdit("ingredients", e.target.value)} className={inputClasses} />
               ) : (
-                <div className="text-slate-700 dark:text-slate-200 text-sm leading-relaxed whitespace-pre-line bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4">{recipe.ingredients}</div>
+                <ul className="text-slate-700 dark:text-slate-200 text-sm leading-relaxed bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 space-y-1.5 list-disc list-outside pl-8">
+                  {splitIngredientLines(recipe.ingredients).map((line, i) => (
+                    <li key={i}>{line}</li>
+                  ))}
+                </ul>
               )}
             </div>
 
@@ -481,6 +486,15 @@ export default function RecipeDetail() {
           </div>
         )}
       </div>
+
+      {/* Mobile floating Start Cooking */}
+      <a
+        href={`/cook?recipe=${recipe.id}`}
+        className="sm:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-full shadow-2xl text-sm font-semibold hover:bg-emerald-700 transition-colors"
+      >
+        <span className="text-base">👨‍🍳</span>
+        Start Cooking
+      </a>
     </AuthGate>
   );
 }

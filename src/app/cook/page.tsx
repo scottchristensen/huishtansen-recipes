@@ -11,6 +11,7 @@ import {
   getMealPlan,
   getCurrentUser,
 } from "@/lib/meal-plan-store";
+import { splitIngredientLines } from "@/lib/ingredients";
 import AuthGate from "@/components/AuthGate";
 
 interface ActiveTimer {
@@ -388,11 +389,7 @@ function CookInner() {
   }, [recipe]);
 
   const ingredientLines = useMemo(
-    () =>
-      (recipe?.ingredients || "")
-        .split("\n")
-        .map((l) => l.trim())
-        .filter(Boolean),
+    () => splitIngredientLines(recipe?.ingredients),
     [recipe]
   );
 

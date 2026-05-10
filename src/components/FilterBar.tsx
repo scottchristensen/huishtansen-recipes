@@ -96,33 +96,6 @@ export default function FilterBar({
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => setMobileFiltersOpen((v) => !v)}
-          aria-expanded={mobileFiltersOpen}
-          aria-label="Toggle filters"
-          className="sm:hidden relative inline-flex items-center justify-center w-10 h-10 shrink-0 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-            />
-          </svg>
-          {hasActiveFilters && (
-            <span className="absolute -top-1 -right-1 min-w-[1.125rem] h-[1.125rem] px-1 bg-emerald-600 text-white text-[10px] font-semibold rounded-full inline-flex items-center justify-center">
-              {activeFilterCount}
-            </span>
-          )}
-        </button>
-
         <div className="hidden sm:flex sm:items-center sm:flex-wrap sm:gap-2">
           {filterControls}
         </div>
@@ -149,6 +122,33 @@ export default function FilterBar({
             />
           </svg>
         </div>
+
+        <button
+          type="button"
+          onClick={() => setMobileFiltersOpen((v) => !v)}
+          aria-expanded={mobileFiltersOpen}
+          aria-label="Toggle filters"
+          className="sm:hidden relative inline-flex items-center justify-center w-10 h-10 shrink-0 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+            />
+          </svg>
+          {hasActiveFilters && (
+            <span className="absolute -top-1 -right-1 min-w-[1.125rem] h-[1.125rem] px-1 bg-emerald-600 text-white text-[10px] font-semibold rounded-full inline-flex items-center justify-center">
+              {activeFilterCount}
+            </span>
+          )}
+        </button>
       </div>
 
       {mobileFiltersOpen && (
