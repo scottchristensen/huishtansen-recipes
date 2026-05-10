@@ -105,6 +105,41 @@ export default function MealPlanKanban({
   ) => {
     const cellKey = `${day}:${slot}`;
     const isHovered = hoverCell === cellKey;
+    const isEmpty = ids.length === 0;
+
+    if (isEmpty) {
+      return (
+        <button
+          key={slot}
+          type="button"
+          onClick={() => onAddClick(day, slot)}
+          onDragOver={handleDragOver(cellKey)}
+          onDragEnter={handleDragOver(cellKey)}
+          onDragLeave={handleDragLeave(cellKey)}
+          onDrop={handleDrop(day, slot)}
+          className={`group w-full text-left p-2 min-h-[88px] transition-colors cursor-pointer ${extraClass} ${
+            isHovered
+              ? "bg-emerald-100/70 dark:bg-emerald-900/30 ring-2 ring-emerald-400 ring-inset"
+              : "hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
+          }`}
+          aria-label={`Add a recipe to ${day} ${SLOT_LABEL[slot]}`}
+        >
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 inline-flex items-center gap-1">
+              <span>{SLOT_ICON[slot]}</span>
+              {SLOT_LABEL[slot]}
+            </span>
+          </div>
+          <p className="text-xs text-slate-400 dark:text-slate-500 italic group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors inline-flex items-center gap-1">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Add a recipe
+          </p>
+        </button>
+      );
+    }
+
     return (
       <div
         key={slot}
@@ -125,18 +160,17 @@ export default function MealPlanKanban({
           </span>
           <button
             onClick={() => onAddClick(day, slot)}
-            className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 text-xs font-medium leading-none px-1"
+            className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors p-0.5"
             aria-label={`Add to ${day} ${slot}`}
+            title="Add another recipe"
           >
-            +
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
           </button>
         </div>
 
-        {ids.length === 0 ? (
-          <p className="text-xs text-slate-300 dark:text-slate-600 italic pointer-events-none">
-            Drop or tap +
-          </p>
-        ) : (
+        {ids.length > 0 && (
           <div className="space-y-1.5">
             {ids.map((id, idx) => {
               const recipe = recipesById.get(id);

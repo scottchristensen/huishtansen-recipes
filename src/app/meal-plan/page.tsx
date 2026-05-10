@@ -273,10 +273,10 @@ export default function MealPlanPage() {
   }
 
   const tabClasses = (tab: string) =>
-    `px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+    `px-2.5 py-1 rounded-md text-xs font-medium transition-colors inline-flex items-center gap-1 ${
       view === tab
-        ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-sm"
-        : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+        ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
+        : "text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400"
     }`;
 
   return (
@@ -323,14 +323,20 @@ export default function MealPlanPage() {
         ) : (
           <>
             <div className="flex items-center justify-between">
-              <div className="flex gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+              <div className="inline-flex rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 p-0.5">
                 <button onClick={() => setView("mine")} className={tabClasses("mine")}>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
                   My Plan
                 </button>
                 <button onClick={() => setView("family")} className={tabClasses("family")}>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
                   Family
                   {otherPlans.length > 0 && (
-                    <span className="ml-1.5 bg-white/30 text-xs px-1.5 py-0.5 rounded-full">
+                    <span className="ml-0.5 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 text-xs px-1.5 py-0.5 rounded-full">
                       {otherPlans.length}
                     </span>
                   )}
