@@ -273,10 +273,10 @@ export default function MealPlanPage() {
   }
 
   const tabClasses = (tab: string) =>
-    `px-2.5 py-1 rounded-md text-xs font-medium transition-colors inline-flex items-center gap-1 ${
+    `px-3 py-1.5 rounded-md text-xs font-medium transition-colors inline-flex items-center gap-1.5 ${
       view === tab
-        ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
-        : "text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400"
+        ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-sm"
+        : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
     }`;
 
   return (
@@ -323,7 +323,7 @@ export default function MealPlanPage() {
         ) : (
           <>
             <div className="flex items-center justify-between">
-              <div className="inline-flex rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 p-0.5">
+              <div className="inline-flex rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-0.5">
                 <button onClick={() => setView("mine")} className={tabClasses("mine")}>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -336,7 +336,7 @@ export default function MealPlanPage() {
                   </svg>
                   Family
                   {otherPlans.length > 0 && (
-                    <span className="ml-0.5 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 text-xs px-1.5 py-0.5 rounded-full">
+                    <span className="ml-0.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs px-1.5 py-0.5 rounded-full">
                       {otherPlans.length}
                     </span>
                   )}
@@ -344,13 +344,13 @@ export default function MealPlanPage() {
               </div>
               {view === "mine" && (
                 <div className="flex items-center gap-2">
-                  <div className="inline-flex rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 p-0.5">
+                  <div className="inline-flex rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-0.5">
                     <button
                       onClick={() => switchLayout("kanban")}
-                      className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors inline-flex items-center gap-1 ${
+                      className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors inline-flex items-center gap-1.5 ${
                         planLayout === "kanban"
-                          ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
-                          : "text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400"
+                          ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-sm"
+                          : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                       }`}
                       title="Kanban view"
                     >
@@ -361,10 +361,10 @@ export default function MealPlanPage() {
                     </button>
                     <button
                       onClick={() => switchLayout("list")}
-                      className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors inline-flex items-center gap-1 ${
+                      className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors inline-flex items-center gap-1.5 ${
                         planLayout === "list"
-                          ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
-                          : "text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400"
+                          ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-sm"
+                          : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                       }`}
                       title="List view"
                     >
