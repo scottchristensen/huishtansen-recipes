@@ -18,14 +18,29 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_NAME = "Huishtansen Eats";
+const SITE_DESCRIPTION =
+  "The Huish family recipe collection — plan, cook, and shop together.";
+
 export const metadata: Metadata = {
-  title: "Huishtansen Eats",
-  description: "The Huishtansen family recipe collection",
+  title: SITE_NAME,
+  description: SITE_DESCRIPTION,
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Huishtansen Eats",
+    title: SITE_NAME,
+  },
+  openGraph: {
+    type: "website",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    siteName: SITE_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
   },
 };
 
