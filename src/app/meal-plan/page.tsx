@@ -603,7 +603,7 @@ export default function MealPlanPage() {
         {showReminderModal && (
           <MealPlanReminderModal
             planner={currentUser}
-            defaultEmail={profile?.email || user?.email || ""}
+            defaultEmail={profile?.email || ""}
             open={showReminderModal}
             onClose={() => {
               setShowReminderModal(false);

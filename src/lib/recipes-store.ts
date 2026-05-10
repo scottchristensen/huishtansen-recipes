@@ -3,6 +3,38 @@
 import { supabase } from "./supabase";
 import { Recipe } from "./types";
 
+// Simple shared family code while SSO is paused. Replace with Supabase Auth
+// later — see _stash/sso/README.md.
+const PIN_AUTH_KEY = "huish-pin-auth";
+const FAMILY_CODE = "2468";
+
+export const AUTH_CHANGE_EVENT = "huish:auth-change";
+
+function emitAuthChange() {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent(AUTH_CHANGE_EVENT));
+  }
+}
+
+export function isAuthenticated(): boolean {
+  if (typeof window === "undefined") return false;
+  return localStorage.getItem(PIN_AUTH_KEY) === "true";
+}
+
+export function authenticate(code: string): boolean {
+  if (code.trim().toLowerCase() === FAMILY_CODE) {
+    localStorage.setItem(PIN_AUTH_KEY, "true");
+    emitAuthChange();
+    return true;
+  }
+  return false;
+}
+
+export function logout(): void {
+  localStorage.removeItem(PIN_AUTH_KEY);
+  emitAuthChange();
+}
+
 export async function getRecipes(): Promise<Recipe[]> {
   const { data, error } = await supabase
     .from("recipes")

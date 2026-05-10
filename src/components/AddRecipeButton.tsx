@@ -58,6 +58,20 @@ export default function AddRecipeButton() {
               </div>
             </div>
           </a>
+          <a
+            href="/add/photo"
+            className="flex items-start gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border-t border-slate-200 dark:border-slate-700"
+          >
+            <span className="text-lg">📷</span>
+            <div>
+              <div className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                Add from photo
+              </div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">
+                Snap a cookbook page or recipe card
+              </div>
+            </div>
+          </a>
         </div>
       )}
     </div>

@@ -136,7 +136,7 @@ export default function SettingsPage() {
                 {profile?.chef_name || "—"}
               </p>
               <p className="text-sm text-slate-500 dark:text-slate-400 truncate">
-                {session?.user?.email}
+                {profile?.email || ""}
               </p>
             </div>
           </div>

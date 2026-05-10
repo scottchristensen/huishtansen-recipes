@@ -5,12 +5,17 @@ import { getCurrentUser, setCurrentUser } from "@/lib/meal-plan-store";
 import { useAuth } from "@/lib/auth-context";
 
 const FAMILY_MEMBERS = [
-  { name: "Olivia", emoji: "👩‍🍳" },
-  { name: "Darcey", emoji: "👩" },
+  { name: "Olivia", emoji: "👩‍🎨" },
+  { name: "Darcey", emoji: "👸" },
   { name: "Annika", emoji: "🧑‍🍳" },
-  { name: "Emma", emoji: "👧" },
-  { name: "Isabel", emoji: "👶" },
-  { name: "Scott", emoji: "👨‍🍳" },
+  { name: "Emma", emoji: "👩‍💼" },
+  { name: "Isabel", emoji: "👩" },
+  { name: "Scott", emoji: "🚴‍♂️" },
+  { name: "Michael", emoji: "👨‍⚕️" },
+  { name: "Sam", emoji: "👨‍💼" },
+  { name: "Karl", emoji: "🤴" },
+  { name: "Cannon", emoji: "👦" },
+  { name: "Lydia", emoji: "👧" },
 ];
 
 interface PersonPickerProps {

@@ -1,12 +1,17 @@
 "use client";
 
 const defaultAvatars: Record<string, string> = {
-  Olivia: "👩‍🍳",
-  Darcey: "👩",
+  Olivia: "👩‍🎨",
+  Darcey: "👸",
   Annika: "🧑‍🍳",
-  Emma: "👧",
-  Isabel: "👶",
-  Scott: "👨‍🍳",
+  Emma: "👩‍💼",
+  Isabel: "👩",
+  Scott: "🚴‍♂️",
+  Michael: "👨‍⚕️",
+  Sam: "👨‍💼",
+  Karl: "🤴",
+  Cannon: "👦",
+  Lydia: "👧",
 };
 
 interface ChefAvatarProps {

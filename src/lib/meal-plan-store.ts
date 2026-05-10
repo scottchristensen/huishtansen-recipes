@@ -76,6 +76,9 @@ export function getCurrentUser(): string {
 
 export function setCurrentUser(name: string): void {
   localStorage.setItem(CURRENT_USER_KEY, name);
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("huish:auth-change"));
+  }
 }
 
 // Returns the Monday of the current week as YYYY-MM-DD (local time).
