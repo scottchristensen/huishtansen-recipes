@@ -70,7 +70,7 @@ interface JsonLdRecipe {
   name?: string;
   description?: string;
   recipeIngredient?: string[];
-  recipeInstructions?: (string | { text?: string; "@type"?: string })[];
+  recipeInstructions?: unknown;
   image?: string | string[] | { url?: string };
   prepTime?: string;
   cookTime?: string;
@@ -108,9 +108,48 @@ interface ParsedRecipe {
   ingredients: string;
   instructions: string;
   photo: string;
+  photos: string[];
+  stepImages: string[];
   time: string;
   servings: string;
   type: string;
+}
+
+function imageOf(val: unknown): string {
+  if (!val) return "";
+  if (typeof val === "string") return val;
+  if (Array.isArray(val)) return imageOf(val[0]);
+  if (typeof val === "object" && "url" in (val as object)) {
+    return String((val as { url?: unknown }).url || "");
+  }
+  return "";
+}
+
+function flattenSteps(items: unknown): { text: string; image: string }[] {
+  if (!Array.isArray(items)) {
+    if (typeof items === "string") return [{ text: items, image: "" }];
+    return [];
+  }
+  const out: { text: string; image: string }[] = [];
+  for (const item of items) {
+    if (typeof item === "string") {
+      out.push({ text: item, image: "" });
+      continue;
+    }
+    if (!item || typeof item !== "object") continue;
+    const obj = item as Record<string, unknown>;
+    if (
+      obj["@type"] === "HowToSection" &&
+      Array.isArray(obj.itemListElement)
+    ) {
+      out.push(...flattenSteps(obj.itemListElement));
+      continue;
+    }
+    const text = typeof obj.text === "string" ? obj.text : "";
+    if (!text) continue;
+    out.push({ text, image: imageOf(obj.image) });
+  }
+  return out;
 }
 
 function parseJsonLdRecipe(data: JsonLdRecipe): ParsedRecipe {
@@ -118,25 +157,23 @@ function parseJsonLdRecipe(data: JsonLdRecipe): ParsedRecipe {
     ? data.recipeIngredient.join("\n")
     : "";
 
-  let instructions = "";
-  if (Array.isArray(data.recipeInstructions)) {
-    instructions = data.recipeInstructions
-      .map((step, i) => {
-        const text = typeof step === "string" ? step : step?.text || "";
-        return `${i + 1}. ${text}`;
-      })
-      .join("\n");
-  } else if (typeof data.recipeInstructions === "string") {
-    instructions = data.recipeInstructions;
-  }
+  const steps = flattenSteps(data.recipeInstructions);
+  const instructions = steps
+    .map((s, i) => `${i + 1}. ${s.text}`)
+    .join("\n");
+  const stepImages = steps.map((s) => s.image);
 
   let photo = "";
+  let photos: string[] = [];
   if (typeof data.image === "string") {
     photo = data.image;
+    photos = [data.image];
   } else if (Array.isArray(data.image)) {
-    photo = data.image[0] || "";
+    photos = data.image.map(imageOf).filter(Boolean);
+    photo = photos[0] || "";
   } else if (data.image?.url) {
     photo = data.image.url;
+    photos = [data.image.url];
   }
 
   const time = parseDuration(
@@ -156,6 +193,8 @@ function parseJsonLdRecipe(data: JsonLdRecipe): ParsedRecipe {
     ingredients,
     instructions,
     photo,
+    photos,
+    stepImages,
     time,
     servings,
     type,
@@ -189,6 +228,8 @@ function extractFromHtml(html: string): ParsedRecipe {
     ingredients: "",
     instructions: "",
     photo: imageMatch?.[1] || "",
+    photos: imageMatch?.[1] ? [imageMatch[1]] : [],
+    stepImages: [],
     time: "",
     servings: "",
     type: "Main Course",

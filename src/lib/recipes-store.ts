@@ -7,6 +7,7 @@ export async function getRecipes(): Promise<Recipe[]> {
   const { data, error } = await supabase
     .from("recipes")
     .select("*")
+    .is("deleted_at", null)
     .order("name");
 
   if (error) {
@@ -22,6 +23,7 @@ export async function getRecipe(id: string): Promise<Recipe | null> {
     .from("recipes")
     .select("*")
     .eq("id", id)
+    .is("deleted_at", null)
     .single();
 
   if (error || !data) return null;
@@ -81,7 +83,12 @@ export async function saveRecipe(recipe: Partial<Recipe> & { id?: string }): Pro
 }
 
 export async function deleteRecipe(id: string): Promise<boolean> {
-  const { error } = await supabase.from("recipes").delete().eq("id", id);
+  // Soft delete: sets deleted_at instead of removing the row.
+  // Recovery instructions are in supabase-migration-soft-delete.sql.
+  const { error } = await supabase
+    .from("recipes")
+    .update({ deleted_at: new Date().toISOString() })
+    .eq("id", id);
   if (error) {
     console.error("Error deleting recipe:", error);
     return false;
@@ -121,6 +128,32 @@ export async function uploadRecipePhoto(
   return urlData.publicUrl;
 }
 
+export async function uploadCoverPhoto(
+  recipeId: string,
+  file: File
+): Promise<string | null> {
+  const ext = file.name.split(".").pop() || "jpg";
+  const path = `${recipeId}/cover-${Date.now()}.${ext}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("recipe-photos")
+    .upload(path, file, { contentType: file.type });
+
+  if (uploadError) {
+    console.error("Error uploading cover photo:", uploadError);
+    return null;
+  }
+
+  const { data: urlData } = supabase.storage
+    .from("recipe-photos")
+    .getPublicUrl(path);
+
+  const updated = await saveRecipe({ id: recipeId, photo: urlData.publicUrl });
+  if (!updated) return null;
+
+  return urlData.publicUrl;
+}
+
 export async function deleteRecipePhoto(
   recipeId: string,
   photoUrl: string
@@ -146,6 +179,19 @@ export function getUniqueChefs(recipes: Recipe[]): string[] {
 
 export function getUniqueTypes(recipes: Recipe[]): string[] {
   return [...new Set(recipes.map((r) => r.type))].sort();
+}
+
+// Recipes added before this date never get the "New" badge — keeps existing
+// seed data from showing up as new. Anything created on/after this date that's
+// within the freshness window gets the badge.
+const NEW_BADGE_CUTOFF = new Date("2026-05-10T00:00:00").getTime();
+const NEW_BADGE_WINDOW_MS = 60 * 24 * 60 * 60 * 1000;
+
+export function isRecipeNew(createdAt?: string): boolean {
+  if (!createdAt) return false;
+  const created = new Date(createdAt).getTime();
+  if (created < NEW_BADGE_CUTOFF) return false;
+  return Date.now() - created <= NEW_BADGE_WINDOW_MS;
 }
 
 export function parseTimeMinutes(time: string): number | null {

@@ -73,13 +73,13 @@ export default function HealthyToggle({
   };
 
   return (
-    <div className="border-t border-amber-100 pt-4">
+    <div className="border-t border-emerald-100 dark:border-slate-700 pt-4">
       <button
         onClick={fetchSuggestions}
         className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
           open
-            ? "bg-green-100 text-green-800 border border-green-200"
-            : "bg-green-50 text-green-700 border border-green-200 hover:bg-green-100"
+            ? "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800"
+            : "bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/60"
         }`}
       >
         <span>🥗</span>
@@ -102,13 +102,13 @@ export default function HealthyToggle({
       {open && (
         <div className="mt-3 space-y-3">
           {loading ? (
-            <div className="flex items-center gap-2 text-sm text-stone-500 py-4">
-              <span className="w-4 h-4 border-2 border-green-300 border-t-green-600 rounded-full animate-spin" />
+            <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 py-4">
+              <span className="w-4 h-4 border-2 border-green-300 dark:border-green-700 border-t-green-600 rounded-full animate-spin" />
               Finding healthy swaps...
             </div>
           ) : suggestions.length > 0 ? (
             <>
-              <p className="text-xs text-stone-400">
+              <p className="text-xs text-slate-400 dark:text-slate-500">
                 {source === "ai"
                   ? "AI-powered suggestions"
                   : "Suggested swaps based on common substitutions"}
@@ -120,8 +120,8 @@ export default function HealthyToggle({
                   onClick={() => toggleSelection(i)}
                   className={`w-full text-left p-3 rounded-lg border transition-colors ${
                     selected.has(i)
-                      ? "bg-green-50 border-green-300"
-                      : "bg-white border-amber-100 hover:border-green-200"
+                      ? "bg-green-50 dark:bg-green-950/40 border-green-300 dark:border-green-700"
+                      : "bg-white dark:bg-slate-900 border-emerald-100 dark:border-slate-700 hover:border-green-200 dark:hover:border-green-700"
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -129,7 +129,7 @@ export default function HealthyToggle({
                       className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 ${
                         selected.has(i)
                           ? "bg-green-500 border-green-500 text-white"
-                          : "border-stone-300"
+                          : "border-slate-300 dark:border-slate-600"
                       }`}
                     >
                       {selected.has(i) && (
@@ -150,15 +150,15 @@ export default function HealthyToggle({
                     </div>
                     <div>
                       <div className="text-sm">
-                        <span className="text-stone-500 line-through">
+                        <span className="text-slate-500 dark:text-slate-400 line-through">
                           {s.original}
                         </span>
-                        <span className="text-stone-400 mx-2">&#8594;</span>
-                        <span className="text-green-700 font-medium">
+                        <span className="text-slate-400 dark:text-slate-500 mx-2">&#8594;</span>
+                        <span className="text-green-700 dark:text-green-300 font-medium">
                           {s.substitute}
                         </span>
                       </div>
-                      <p className="text-xs text-stone-400 mt-0.5">
+                      <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
                         {s.reason}
                       </p>
                     </div>
@@ -177,7 +177,7 @@ export default function HealthyToggle({
               )}
             </>
           ) : (
-            <p className="text-sm text-stone-400 py-2">
+            <p className="text-sm text-slate-400 dark:text-slate-500 py-2">
               No suggestions available for this recipe.
             </p>
           )}

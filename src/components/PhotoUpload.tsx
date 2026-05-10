@@ -35,12 +35,12 @@ export default function PhotoUpload({ photos, onPhotosChange }: PhotoUploadProps
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-medium text-stone-700">My Attempt Photos</h3>
+        <h3 className="text-sm font-medium text-slate-700 dark:text-slate-200">My Attempt Photos</h3>
         <button
           type="button"
           onClick={() => fileRef.current?.click()}
           disabled={uploading}
-          className="text-sm text-amber-600 hover:text-amber-800 font-medium disabled:opacity-50"
+          className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium disabled:opacity-50"
         >
           {uploading ? "Processing..." : "+ Add Photo"}
         </button>
@@ -78,10 +78,10 @@ export default function PhotoUpload({ photos, onPhotosChange }: PhotoUploadProps
       ) : (
         <div
           onClick={() => fileRef.current?.click()}
-          className="border-2 border-dashed border-amber-200 rounded-lg p-6 text-center cursor-pointer hover:border-amber-400 transition-colors"
+          className="border-2 border-dashed border-emerald-200 dark:border-slate-700 rounded-lg p-6 text-center cursor-pointer hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors"
         >
           <div className="text-2xl mb-1">📸</div>
-          <p className="text-sm text-stone-400">
+          <p className="text-sm text-slate-400 dark:text-slate-500">
             Tap to upload photos of your attempts
           </p>
         </div>

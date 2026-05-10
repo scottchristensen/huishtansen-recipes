@@ -79,7 +79,7 @@ export default function ChefProfilePage() {
     return (
       <AuthGate>
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-4 border-amber-300 border-t-amber-600 rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-emerald-300 dark:border-emerald-700 border-t-emerald-600 rounded-full animate-spin" />
         </div>
       </AuthGate>
     );
@@ -89,7 +89,7 @@ export default function ChefProfilePage() {
     return (
       <AuthGate>
         <div className="text-center py-12">
-          <p className="text-stone-400 text-lg">Chef not found</p>
+          <p className="text-slate-400 dark:text-slate-500 text-lg">Chef not found</p>
         </div>
       </AuthGate>
     );
@@ -122,9 +122,6 @@ export default function ChefProfilePage() {
         )
       : 0;
 
-  const approvedCount = chefRecipes.filter(
-    (r) => r.status === "family-approved"
-  ).length;
   const remixCount = chefRecipes.filter((r) => r.remix_of).length;
 
   // Signature dish: highest difficulty, then longest time
@@ -185,15 +182,15 @@ export default function ChefProfilePage() {
   const tabClasses = (tab: string) =>
     `px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
       activeTab === tab
-        ? "bg-amber-500 text-white"
-        : "text-stone-500 hover:bg-amber-50"
+        ? "bg-emerald-500 text-white"
+        : "text-slate-500 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-slate-800"
     }`;
 
   return (
     <AuthGate>
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Profile header */}
-        <div className="bg-white rounded-2xl border border-amber-100 p-6 text-center">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-emerald-100 dark:border-slate-700 p-6 text-center">
           <div className="flex justify-center mb-3 relative group">
             <ChefAvatar
               name={profile.name}
@@ -232,61 +229,50 @@ export default function ChefProfilePage() {
               />
             </label>
           </div>
-          <h1 className="text-2xl font-bold text-stone-900">{profile.name}</h1>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{profile.name}</h1>
           {profile.bio && (
-            <p className="text-stone-500 text-sm mt-1">{profile.bio}</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{profile.bio}</p>
           )}
 
           {/* Quick stats row */}
           <div className="flex justify-center gap-6 mt-5">
             <div className="text-center">
-              <div className="text-2xl font-bold text-amber-600">
+              <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                 {chefRecipes.length}
               </div>
-              <div className="text-xs text-stone-400">Recipes</div>
+              <div className="text-xs text-slate-400 dark:text-slate-500">Recipes</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">
-                {approvedCount}
-              </div>
-              <div className="text-xs text-stone-400">Family Approved</div>
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{avgTime}</div>
+              <div className="text-xs text-slate-400 dark:text-slate-500">Avg Minutes</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{avgTime}</div>
-              <div className="text-xs text-stone-400">Avg Minutes</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                 {plannedMeals}
               </div>
-              <div className="text-xs text-stone-400">Planned</div>
+              <div className="text-xs text-slate-400 dark:text-slate-500">Planned</div>
             </div>
           </div>
 
           {/* Badges */}
           <div className="flex flex-wrap justify-center gap-2 mt-4">
             {profile.favorite_cuisine && (
-              <span className="text-xs bg-amber-50 text-amber-700 px-3 py-1 rounded-full">
+              <span className="text-xs bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 px-3 py-1 rounded-full">
                 Loves {profile.favorite_cuisine}
               </span>
             )}
             {chefRecipes.length >= 10 && (
-              <span className="text-xs bg-purple-50 text-purple-700 px-3 py-1 rounded-full">
+              <span className="text-xs bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full">
                 Prolific Chef
               </span>
             )}
-            {approvedCount >= 5 && (
-              <span className="text-xs bg-green-50 text-green-700 px-3 py-1 rounded-full">
-                Family Favorite
-              </span>
-            )}
             {remixCount > 0 && (
-              <span className="text-xs bg-blue-50 text-blue-700 px-3 py-1 rounded-full">
+              <span className="text-xs bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full">
                 Health Remixer
               </span>
             )}
             {chefRecipes.some((r) => r.difficulty === "Hard") && (
-              <span className="text-xs bg-red-50 text-red-700 px-3 py-1 rounded-full">
+              <span className="text-xs bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 px-3 py-1 rounded-full">
                 Challenge Accepted
               </span>
             )}
@@ -294,7 +280,7 @@ export default function ChefProfilePage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 bg-stone-100 p-1 rounded-xl">
+        <div className="flex gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
           <button
             onClick={() => setActiveTab("recipes")}
             className={tabClasses("recipes")}
@@ -321,7 +307,7 @@ export default function ChefProfilePage() {
             {chefRecipes.length === 0 ? (
               <div className="text-center py-8">
                 <div className="text-3xl mb-2">🍴</div>
-                <p className="text-stone-400">
+                <p className="text-slate-400 dark:text-slate-500">
                   No recipes yet. Time to get cooking!
                 </p>
               </div>
@@ -339,15 +325,15 @@ export default function ChefProfilePage() {
           <div className="space-y-4">
             {/* Signature dish */}
             {signatureDish && (
-              <div className="bg-white rounded-xl border border-amber-100 p-4">
-                <h3 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-2">
+              <div className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-700 p-4">
+                <h3 className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
                   Signature Dish
                 </h3>
                 <a
                   href={`/recipe/${signatureDish.id}`}
                   className="flex items-center gap-3 group"
                 >
-                  <div className="w-12 h-12 rounded-lg bg-amber-100 overflow-hidden shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 overflow-hidden shrink-0">
                     {signatureDish.photo ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -365,10 +351,10 @@ export default function ChefProfilePage() {
                     )}
                   </div>
                   <div>
-                    <p className="font-semibold text-stone-900 group-hover:text-amber-600 transition-colors">
+                    <p className="font-semibold text-slate-900 dark:text-slate-100 group-hover:text-emerald-600 transition-colors">
                       {signatureDish.name}
                     </p>
-                    <p className="text-xs text-stone-400">
+                    <p className="text-xs text-slate-400 dark:text-slate-500">
                       {signatureDish.difficulty} · {signatureDish.time}
                     </p>
                   </div>
@@ -377,8 +363,8 @@ export default function ChefProfilePage() {
             )}
 
             {/* Type breakdown */}
-            <div className="bg-white rounded-xl border border-amber-100 p-4">
-              <h3 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-3">
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-700 p-4">
+              <h3 className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">
                 Recipe Types
               </h3>
               <div className="space-y-2">
@@ -389,18 +375,18 @@ export default function ChefProfilePage() {
                       <span className="text-base w-6 text-center">
                         {typeEmojis[type] || "🍴"}
                       </span>
-                      <span className="text-sm text-stone-700 w-32">
+                      <span className="text-sm text-slate-700 dark:text-slate-200 w-32">
                         {type}
                       </span>
-                      <div className="flex-1 bg-amber-50 rounded-full h-4 overflow-hidden">
+                      <div className="flex-1 bg-emerald-50 dark:bg-slate-800 rounded-full h-4 overflow-hidden">
                         <div
-                          className="bg-amber-400 h-full rounded-full transition-all"
+                          className="bg-emerald-400 h-full rounded-full transition-all"
                           style={{
                             width: `${(count / chefRecipes.length) * 100}%`,
                           }}
                         />
                       </div>
-                      <span className="text-sm text-stone-400 w-8 text-right">
+                      <span className="text-sm text-slate-400 dark:text-slate-500 w-8 text-right">
                         {count}
                       </span>
                     </div>
@@ -409,17 +395,17 @@ export default function ChefProfilePage() {
             </div>
 
             {/* Difficulty breakdown */}
-            <div className="bg-white rounded-xl border border-amber-100 p-4">
-              <h3 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-3">
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-700 p-4">
+              <h3 className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">
                 Difficulty Spread
               </h3>
               <div className="flex gap-3">
                 {(["Easy", "Medium", "Hard"] as const).map((diff) => {
                   const count = difficultyBreakdown[diff] || 0;
                   const colors = {
-                    Easy: "bg-green-100 text-green-700 border-green-200",
-                    Medium: "bg-amber-100 text-amber-700 border-amber-200",
-                    Hard: "bg-red-100 text-red-700 border-red-200",
+                    Easy: "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800",
+                    Medium: "bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800",
+                    Hard: "bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800",
                   };
                   return (
                     <div
@@ -436,15 +422,15 @@ export default function ChefProfilePage() {
 
             {/* Top ingredients */}
             {topIngredients.length > 0 && (
-              <div className="bg-white rounded-xl border border-amber-100 p-4">
-                <h3 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-3">
+              <div className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-700 p-4">
+                <h3 className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">
                   Go-To Ingredients
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {topIngredients.map((word) => (
                     <span
                       key={word}
-                      className="text-sm bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full capitalize"
+                      className="text-sm bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 px-3 py-1.5 rounded-full capitalize"
                     >
                       {word}
                     </span>
@@ -460,10 +446,10 @@ export default function ChefProfilePage() {
             {plannedMeals === 0 ? (
               <div className="text-center py-8">
                 <div className="text-3xl mb-2">📅</div>
-                <p className="text-stone-400">No meals planned this week</p>
+                <p className="text-slate-400 dark:text-slate-500">No meals planned this week</p>
                 <a
                   href="/meal-plan"
-                  className="text-amber-600 hover:underline text-sm mt-2 inline-block"
+                  className="text-emerald-600 dark:text-emerald-400 hover:underline text-sm mt-2 inline-block"
                 >
                   Go plan some meals
                 </a>
@@ -474,9 +460,9 @@ export default function ChefProfilePage() {
                 return (
                   <div
                     key={day.day}
-                    className="bg-white rounded-xl border border-amber-100 p-3"
+                    className="bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-slate-700 p-3"
                   >
-                    <h4 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-2">
+                    <h4 className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
                       {day.day}
                     </h4>
                     {day.recipeIds.map((id, idx) => {
@@ -488,7 +474,7 @@ export default function ChefProfilePage() {
                           href={`/recipe/${recipe.id}`}
                           className="flex items-center gap-3 py-1.5 group"
                         >
-                          <div className="w-8 h-8 rounded-md bg-amber-100 overflow-hidden shrink-0">
+                          <div className="w-8 h-8 rounded-md bg-emerald-100 dark:bg-emerald-900/40 overflow-hidden shrink-0">
                             {recipe.photo ? (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img
@@ -507,7 +493,7 @@ export default function ChefProfilePage() {
                               </div>
                             )}
                           </div>
-                          <span className="text-sm text-stone-700 group-hover:text-amber-600 transition-colors">
+                          <span className="text-sm text-slate-700 dark:text-slate-200 group-hover:text-emerald-600 transition-colors">
                             {recipe.name}
                           </span>
                         </a>

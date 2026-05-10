@@ -34,7 +34,7 @@ export default function ChefAvatar({
 
   const content = (
     <div
-      className={`${sizeClasses[size]} rounded-full overflow-hidden bg-amber-100 flex items-center justify-center shrink-0 border border-amber-200`}
+      className={`${sizeClasses[size]} rounded-full overflow-hidden bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center shrink-0 border border-emerald-200 dark:border-slate-700`}
       title={name}
     >
       {avatarUrl ? (
