@@ -16,6 +16,7 @@ import {
 import { splitIngredientLines } from "@/lib/ingredients";
 import AuthGate from "@/components/AuthGate";
 import HealthyToggle from "@/components/HealthyToggle";
+import { selectChevronClasses } from "@/lib/form-styles";
 
 const difficultyColor = {
   Easy: "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300",
@@ -273,12 +274,12 @@ export default function RecipeDetail() {
                 />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input type="text" value={editForm.chef || ""} onChange={(e) => updateEdit("chef", e.target.value)} placeholder="Chef" className={inputClasses} />
-                  <select value={editForm.type || ""} onChange={(e) => updateEdit("type", e.target.value)} className={inputClasses}>
+                  <select value={editForm.type || ""} onChange={(e) => updateEdit("type", e.target.value)} className={`${inputClasses} ${selectChevronClasses}`}>
                     <option>Main Course</option><option>Salad</option><option>Breakfast</option><option>Dessert</option><option>Baked Good</option><option>Appetizers/Snacks</option><option>Side Dish</option>
                   </select>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <select value={editForm.difficulty || ""} onChange={(e) => updateEdit("difficulty", e.target.value)} className={inputClasses}>
+                  <select value={editForm.difficulty || ""} onChange={(e) => updateEdit("difficulty", e.target.value)} className={`${inputClasses} ${selectChevronClasses}`}>
                     <option>Easy</option><option>Medium</option><option>Hard</option>
                   </select>
                   <input type="text" value={editForm.time || ""} onChange={(e) => updateEdit("time", e.target.value)} placeholder="Time" className={inputClasses} />

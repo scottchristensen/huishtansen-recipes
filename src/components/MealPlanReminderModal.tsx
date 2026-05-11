@@ -6,6 +6,7 @@ import {
   getReminder,
   saveReminder,
 } from "@/lib/meal-plan-store";
+import { selectChevronClasses } from "@/lib/form-styles";
 
 const DAYS_OF_WEEK = [
   { value: 0, label: "Sunday" },
@@ -164,7 +165,7 @@ export default function MealPlanReminderModal({
                 <select
                   value={dayOfWeek}
                   onChange={(e) => setDayOfWeek(parseInt(e.target.value, 10))}
-                  className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className={`w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 ${selectChevronClasses}`}
                 >
                   {DAYS_OF_WEEK.map((d) => (
                     <option key={d.value} value={d.value}>

@@ -7,6 +7,7 @@ import { saveRecipe } from "@/lib/recipes-store";
 import { getCurrentUser } from "@/lib/meal-plan-store";
 import AuthGate from "@/components/AuthGate";
 import ChefSelect from "@/components/ChefSelect";
+import { selectChevronClasses } from "@/lib/form-styles";
 
 export default function ImportRecipe() {
   const router = useRouter();
@@ -159,7 +160,7 @@ export default function ImportRecipe() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Type</label>
-                  <select value={preview.type || "Main Course"} onChange={(e) => updatePreview("type", e.target.value)} className={inputClasses}>
+                  <select value={preview.type || "Main Course"} onChange={(e) => updatePreview("type", e.target.value)} className={`${inputClasses} ${selectChevronClasses}`}>
                     <option>Main Course</option><option>Salad</option><option>Breakfast</option><option>Dessert</option><option>Baked Good</option><option>Appetizers/Snacks</option><option>Side Dish</option>
                   </select>
                 </div>
@@ -168,7 +169,7 @@ export default function ImportRecipe() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Difficulty</label>
-                  <select value={preview.difficulty || "Medium"} onChange={(e) => updatePreview("difficulty", e.target.value)} className={inputClasses}>
+                  <select value={preview.difficulty || "Medium"} onChange={(e) => updatePreview("difficulty", e.target.value)} className={`${inputClasses} ${selectChevronClasses}`}>
                     <option>Easy</option><option>Medium</option><option>Hard</option>
                   </select>
                 </div>
