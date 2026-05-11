@@ -215,21 +215,23 @@ export default function MealPlanKanban({
                   className="group flex items-center gap-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md p-1.5 cursor-grab active:cursor-grabbing select-none"
                 >
                   <div
-                    className="w-7 h-7 rounded bg-slate-200 dark:bg-slate-700 overflow-hidden shrink-0"
+                    className="relative w-7 h-7 rounded bg-slate-200 dark:bg-slate-700 overflow-hidden shrink-0"
                     aria-hidden
                   >
-                    {recipe.photo ? (
+                    <div className="absolute inset-0 flex items-center justify-center text-xs">
+                      {SLOT_ICON[slot]}
+                    </div>
+                    {recipe.photo && (
                       /* eslint-disable-next-line @next/next/no-img-element */
                       <img
                         src={recipe.photo}
                         alt=""
                         draggable={false}
-                        className="w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = "none";
+                        }}
                       />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-xs">
-                        🍽️
-                      </div>
                     )}
                   </div>
                   <span
@@ -395,21 +397,23 @@ function RecipeChip({ recipe, onRemove }: ChipProps) {
       className="group inline-flex items-center gap-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-full pl-1 pr-2 py-1 text-xs text-slate-800 dark:text-slate-200 cursor-grab active:cursor-grabbing shadow-sm select-none hover:border-emerald-400"
     >
       <div
-        className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden"
+        className="relative w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden"
         aria-hidden
       >
-        {recipe.photo ? (
+        <div className="absolute inset-0 flex items-center justify-center text-[10px]">
+          🍽️
+        </div>
+        {recipe.photo && (
           /* eslint-disable-next-line @next/next/no-img-element */
           <img
             src={recipe.photo}
             alt=""
             draggable={false}
-            className="w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = "none";
+            }}
           />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-[10px]">
-            🍽️
-          </div>
         )}
       </div>
       <span className="max-w-[160px] truncate">{recipe.name}</span>

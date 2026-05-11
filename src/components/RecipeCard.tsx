@@ -15,20 +15,19 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
     <div className="group block bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-md transition-shadow">
       <a href={`/recipe/${recipe.id}`}>
         <div className="aspect-[4/3] relative overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
-          {recipe.photo ? (
+          <div className="absolute inset-0 flex items-center justify-center text-5xl text-slate-400 dark:text-slate-600">
+            🍽️
+          </div>
+          {recipe.photo && (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
               src={recipe.photo}
               alt={recipe.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = "none";
               }}
             />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-5xl text-slate-400 dark:text-slate-600">
-              🍽️
-            </div>
           )}
           <div className="absolute top-2 left-2">
             <span

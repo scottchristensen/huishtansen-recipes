@@ -467,15 +467,20 @@ function CookInner() {
 
         {recipe.photo && (
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={recipe.photo}
-              alt={recipe.name}
-              className="w-full max-h-72 object-cover"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = "none";
-              }}
-            />
+            <div className="relative w-full h-48 sm:h-72 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
+              <div className="absolute inset-0 flex items-center justify-center text-6xl text-slate-400 dark:text-slate-600">
+                🍽️
+              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={recipe.photo}
+                alt={recipe.name}
+                className="absolute inset-0 w-full h-full object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = "none";
+                }}
+              />
+            </div>
             {extraPhotos.length > 0 && (
               <div className="flex gap-2 p-2 overflow-x-auto bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700">
                 {extraPhotos.map((src, i) => (

@@ -188,11 +188,17 @@ export default function RecipeDetail() {
           <div className="aspect-[2/1] relative overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
             {recipe.photo ? (
               <>
+                <div className="absolute inset-0 flex items-center justify-center text-6xl text-slate-400 dark:text-slate-600">
+                  🍽️
+                </div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={recipe.photo}
                   alt={recipe.name}
-                  className="w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = "none";
+                  }}
                 />
                 <label
                   className={`absolute bottom-3 right-3 bg-white/90 dark:bg-slate-900/90 hover:bg-white dark:hover:bg-slate-900 text-slate-700 dark:text-slate-200 text-xs font-medium px-3 py-1.5 rounded-full shadow cursor-pointer inline-flex items-center gap-1.5 transition-colors ${

@@ -149,20 +149,19 @@ export default function RecipeTable({
                       className="relative w-10 h-10 block rounded-md overflow-hidden cursor-pointer bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900"
                       aria-label={isSelected ? "Deselect" : "Select"}
                     >
-                      {recipe.photo ? (
+                      <div className="absolute inset-0 flex items-center justify-center text-lg text-slate-400 dark:text-slate-600">
+                        🍽️
+                      </div>
+                      {recipe.photo && (
                         /* eslint-disable-next-line @next/next/no-img-element */
                         <img
                           src={recipe.photo}
                           alt=""
-                          className="w-full h-full object-cover"
+                          className="absolute inset-0 w-full h-full object-cover"
                           onError={(e) => {
                             (e.target as HTMLImageElement).style.display = "none";
                           }}
                         />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-lg text-slate-400 dark:text-slate-600">
-                          🍽️
-                        </div>
                       )}
                       <span
                         className={`absolute inset-0 flex items-center justify-center transition-opacity ${

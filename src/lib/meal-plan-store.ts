@@ -13,9 +13,9 @@ export const SLOT_LABEL: Record<MealSlot, string> = {
 };
 
 export const SLOT_ICON: Record<MealSlot, string> = {
-  breakfast: "🌅",
-  lunch: "🌞",
-  dinner: "🌙",
+  breakfast: "🥞",
+  lunch: "🥪",
+  dinner: "🍝",
 };
 
 export interface SlotEntries {
