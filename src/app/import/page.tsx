@@ -4,7 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Recipe } from "@/lib/types";
 import { saveRecipe } from "@/lib/recipes-store";
+import { getCurrentUser } from "@/lib/meal-plan-store";
 import AuthGate from "@/components/AuthGate";
+import ChefSelect from "@/components/ChefSelect";
 
 export default function ImportRecipe() {
   const router = useRouter();
@@ -41,7 +43,7 @@ export default function ImportRecipe() {
         time: data.recipe.time,
         servings: data.recipe.servings,
         type: data.recipe.type || "Main Course",
-        chef: "",
+        chef: getCurrentUser(),
         difficulty: "Medium",
         link: url,
         status: "want-to-try",
@@ -60,7 +62,7 @@ export default function ImportRecipe() {
     const recipe = await saveRecipe({
       name: preview.name || "Imported Recipe",
       type: preview.type || "Main Course",
-      chef: preview.chef || "Web",
+      chef: preview.chef || getCurrentUser() || "Unknown",
       difficulty: (preview.difficulty as Recipe["difficulty"]) || "Medium",
       time: preview.time || "",
       servings: preview.servings || "",
@@ -153,7 +155,7 @@ export default function ImportRecipe() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Source / Chef</label>
-                  <input type="text" value={preview.chef || ""} onChange={(e) => updatePreview("chef", e.target.value)} placeholder="Pinterest, Olivia, Web..." className={inputClasses} />
+                  <ChefSelect value={preview.chef || ""} onChange={(v) => updatePreview("chef", v)} placeholder="Pick a chef" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Type</label>

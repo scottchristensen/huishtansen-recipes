@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Recipe } from "@/lib/types";
 import { saveRecipe } from "@/lib/recipes-store";
+import { getCurrentUser } from "@/lib/meal-plan-store";
 import { useAuth } from "@/lib/auth-context";
 import AuthGate from "@/components/AuthGate";
+import ChefSelect from "@/components/ChefSelect";
 
 export default function AddRecipe() {
   const router = useRouter();
@@ -25,10 +27,11 @@ export default function AddRecipe() {
     status: "want-to-try" as Recipe["status"],
   });
 
-  // Auto-fill chef from signed-in user's profile
+  // Pre-fill chef with the currently signed-in user
   useEffect(() => {
-    if (profile?.chef_name && !form.chef) {
-      setForm((prev) => ({ ...prev, chef: profile.chef_name }));
+    const me = profile?.chef_name || getCurrentUser();
+    if (me && !form.chef) {
+      setForm((prev) => ({ ...prev, chef: me }));
     }
   }, [profile, form.chef]);
 
@@ -83,7 +86,7 @@ export default function AddRecipe() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Chef / Source *</label>
-                <input type="text" required value={form.chef} onChange={(e) => update("chef", e.target.value)} placeholder="Who made this?" className={inputClasses} />
+                <ChefSelect value={form.chef} onChange={(v) => update("chef", v)} placeholder="Pick a chef" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Type</label>

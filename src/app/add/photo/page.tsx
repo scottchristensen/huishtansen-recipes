@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Recipe } from "@/lib/types";
 import { saveRecipe, uploadCoverPhoto } from "@/lib/recipes-store";
+import { getCurrentUser } from "@/lib/meal-plan-store";
 import { useAuth } from "@/lib/auth-context";
 import AuthGate from "@/components/AuthGate";
+import ChefSelect from "@/components/ChefSelect";
 
 export default function AddRecipeFromPhoto() {
   const router = useRouter();
@@ -18,8 +20,9 @@ export default function AddRecipeFromPhoto() {
   const [preview, setPreview] = useState<Partial<Recipe> | null>(null);
 
   useEffect(() => {
-    if (preview && profile?.chef_name && !preview.chef) {
-      setPreview((prev) => (prev ? { ...prev, chef: profile.chef_name } : null));
+    const me = profile?.chef_name || getCurrentUser();
+    if (preview && me && !preview.chef) {
+      setPreview((prev) => (prev ? { ...prev, chef: me } : null));
     }
   }, [preview, profile]);
 
@@ -68,7 +71,7 @@ export default function AddRecipeFromPhoto() {
         servings: r.servings || "",
         type: r.type || "Main Course",
         difficulty: "Medium",
-        chef: profile?.chef_name || "",
+        chef: profile?.chef_name || getCurrentUser() || "",
         status: "want-to-try",
         link: "",
       });
@@ -225,8 +228,8 @@ export default function AddRecipeFromPhoto() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Chef / Source</label>
-                  <input type="text" value={preview.chef || ""} onChange={(e) => updatePreview("chef", e.target.value)} placeholder="Who made this?" className={inputClasses} />
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Chef</label>
+                  <ChefSelect value={preview.chef || ""} onChange={(v) => updatePreview("chef", v)} placeholder="Pick a chef" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Type</label>

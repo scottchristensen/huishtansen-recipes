@@ -348,7 +348,10 @@ function CookInner() {
       const saved = await saveRecipe({
         name: recipe.name,
         type: "Main Course",
-        chef: recipe.chef && recipe.chef !== "Web" ? recipe.chef : "Web",
+        chef:
+          recipe.chef && recipe.chef !== "Web"
+            ? recipe.chef
+            : getCurrentUser() || "Unknown",
         difficulty: "Medium",
         time: recipe.time || "",
         servings: "",
