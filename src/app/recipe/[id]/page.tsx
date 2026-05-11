@@ -14,6 +14,7 @@ import {
   isRecipeNew,
 } from "@/lib/recipes-store";
 import { splitIngredientLines } from "@/lib/ingredients";
+import { safeBack } from "@/lib/nav";
 import AuthGate from "@/components/AuthGate";
 import HealthyToggle from "@/components/HealthyToggle";
 import { selectChevronClasses } from "@/lib/form-styles";
@@ -167,7 +168,7 @@ export default function RecipeDetail() {
       <div className="max-w-2xl mx-auto pb-24 sm:pb-0">
         <div className="flex items-center justify-between mb-4">
           <button
-            onClick={() => router.back()}
+            onClick={() => safeBack(router)}
             className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 text-sm font-medium inline-flex items-center gap-1"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

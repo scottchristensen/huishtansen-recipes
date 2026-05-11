@@ -9,6 +9,7 @@ import { useAuth } from "@/lib/auth-context";
 import AuthGate from "@/components/AuthGate";
 import ChefSelect from "@/components/ChefSelect";
 import { selectChevronClasses } from "@/lib/form-styles";
+import { safeBack } from "@/lib/nav";
 
 export default function AddRecipe() {
   const router = useRouter();
@@ -66,7 +67,7 @@ export default function AddRecipe() {
     <AuthGate>
       <div className="max-w-2xl mx-auto">
         <button
-          onClick={() => router.back()}
+          onClick={() => safeBack(router)}
           className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 text-sm font-medium mb-4 inline-flex items-center gap-1"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,7 +139,7 @@ export default function AddRecipe() {
               <button type="submit" disabled={saving} className="flex-1 bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-50">
                 {saving ? "Saving..." : "Save Recipe"}
               </button>
-              <button type="button" onClick={() => router.back()} className="px-6 py-3 border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+              <button type="button" onClick={() => safeBack(router)} className="px-6 py-3 border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                 Cancel
               </button>
             </div>
