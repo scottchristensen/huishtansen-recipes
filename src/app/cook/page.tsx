@@ -12,7 +12,13 @@ import {
   getCurrentUser,
 } from "@/lib/meal-plan-store";
 import { splitIngredientLines } from "@/lib/ingredients";
+import { scaleIngredientLine } from "@/lib/scaling";
+import {
+  RECIPE_SCALE_EVENT,
+  getRecipeScale,
+} from "@/lib/recipe-scale";
 import AuthGate from "@/components/AuthGate";
+import ScaleControl from "@/components/ScaleControl";
 
 interface ActiveTimer {
   id: string;
@@ -391,9 +397,26 @@ function CookInner() {
     return out;
   }, [recipe]);
 
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    if (!recipe?.id) return;
+    setScale(getRecipeScale(recipe.id));
+    const refresh = (e: Event) => {
+      const detail = (e as CustomEvent<{ recipeId: string; scale: number }>)
+        .detail;
+      if (detail?.recipeId === recipe.id) setScale(detail.scale);
+    };
+    window.addEventListener(RECIPE_SCALE_EVENT, refresh);
+    return () => window.removeEventListener(RECIPE_SCALE_EVENT, refresh);
+  }, [recipe?.id]);
+
   const ingredientLines = useMemo(
-    () => splitIngredientLines(recipe?.ingredients),
-    [recipe]
+    () =>
+      splitIngredientLines(recipe?.ingredients).map((line) =>
+        scaleIngredientLine(line, scale)
+      ),
+    [recipe, scale]
   );
 
   const instructionSteps = useMemo(() => {
@@ -498,6 +521,13 @@ function CookInner() {
               </div>
             )}
           </div>
+        )}
+
+        {recipe.id && (
+          <ScaleControl
+            recipeId={recipe.id}
+            baseServings={recipe.time ? undefined : undefined}
+          />
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">

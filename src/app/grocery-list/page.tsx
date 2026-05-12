@@ -17,6 +17,10 @@ import {
   formatEntry,
   isPantryStaple,
 } from "@/lib/grocery";
+import {
+  RECIPE_SCALE_EVENT,
+  getRecipeScale,
+} from "@/lib/recipe-scale";
 import AuthGate from "@/components/AuthGate";
 
 type Mode = "healthy" | "cheap";
@@ -109,6 +113,13 @@ export default function GroceryListPage() {
     return m;
   }, [recipes]);
 
+  const [scaleVersion, setScaleVersion] = useState(0);
+  useEffect(() => {
+    const bump = () => setScaleVersion((v) => v + 1);
+    window.addEventListener(RECIPE_SCALE_EVENT, bump);
+    return () => window.removeEventListener(RECIPE_SCALE_EVENT, bump);
+  }, []);
+
   const aggregateInputs = useMemo<AggregateInput[]>(() => {
     const seen = new Set<string>();
     const out: AggregateInput[] = [];
@@ -117,10 +128,16 @@ export default function GroceryListPage() {
       seen.add(id);
       const r = recipesById.get(id);
       if (!r) continue;
-      out.push({ recipeName: r.name, ingredients: r.ingredients });
+      out.push({
+        recipeName: r.name,
+        ingredients: r.ingredients,
+        scale: getRecipeScale(r.id),
+      });
     }
     return out;
-  }, [plannedRecipeIds, recipesById]);
+    // scaleVersion bumps on any scale change so we re-read sessionStorage.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plannedRecipeIds, recipesById, scaleVersion]);
 
   const entries = useMemo<GroceryEntry[]>(
     () => aggregateIngredients(aggregateInputs),

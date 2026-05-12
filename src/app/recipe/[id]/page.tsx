@@ -15,6 +15,12 @@ import {
 } from "@/lib/recipes-store";
 import { splitIngredientLines } from "@/lib/ingredients";
 import { safeBack } from "@/lib/nav";
+import { scaleIngredientLine } from "@/lib/scaling";
+import {
+  RECIPE_SCALE_EVENT,
+  getRecipeScale,
+} from "@/lib/recipe-scale";
+import ScaleControl from "@/components/ScaleControl";
 import AuthGate from "@/components/AuthGate";
 import HealthyToggle from "@/components/HealthyToggle";
 import { selectChevronClasses } from "@/lib/form-styles";
@@ -36,6 +42,19 @@ export default function RecipeDetail() {
   const [notes, setNotes] = useState("");
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(false);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    if (!recipe?.id) return;
+    setScale(getRecipeScale(recipe.id));
+    const refresh = (e: Event) => {
+      const detail = (e as CustomEvent<{ recipeId: string; scale: number }>)
+        .detail;
+      if (detail?.recipeId === recipe.id) setScale(detail.scale);
+    };
+    window.addEventListener(RECIPE_SCALE_EVENT, refresh);
+    return () => window.removeEventListener(RECIPE_SCALE_EVENT, refresh);
+  }, [recipe?.id]);
 
   const loadRecipe = useCallback(async () => {
     const r = await getRecipe(params.id as string);
@@ -329,11 +348,14 @@ export default function RecipeDetail() {
               {editing ? (
                 <textarea rows={8} value={editForm.ingredients || ""} onChange={(e) => updateEdit("ingredients", e.target.value)} className={inputClasses} />
               ) : (
-                <ul className="text-slate-700 dark:text-slate-200 text-sm leading-relaxed bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 space-y-1.5 list-disc list-outside pl-8">
-                  {splitIngredientLines(recipe.ingredients).map((line, i) => (
-                    <li key={i}>{line}</li>
-                  ))}
-                </ul>
+                <div className="space-y-3">
+                  <ScaleControl recipeId={recipe.id} baseServings={recipe.servings} />
+                  <ul className="text-slate-700 dark:text-slate-200 text-sm leading-relaxed bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 space-y-1.5 list-disc list-outside pl-8">
+                    {splitIngredientLines(recipe.ingredients).map((line, i) => (
+                      <li key={i}>{scaleIngredientLine(line, scale)}</li>
+                    ))}
+                  </ul>
+                </div>
               )}
             </div>
 

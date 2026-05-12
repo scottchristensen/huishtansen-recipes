@@ -1,3 +1,5 @@
+import { formatAsFraction } from "./scaling";
+
 // Grocery list aggregator: parses ingredient lines from many recipes,
 // dedupes by normalized name, and sums quantities by unit.
 //
@@ -155,6 +157,8 @@ function splitBlock(block: string): string[] {
 export interface AggregateInput {
   recipeName: string;
   ingredients: string;
+  // Optional per-recipe scale (e.g. 0.5 for half, 2 for double). Defaults to 1.
+  scale?: number;
 }
 
 export function aggregateIngredients(
@@ -162,7 +166,8 @@ export function aggregateIngredients(
 ): GroceryEntry[] {
   const map = new Map<string, GroceryEntry>();
 
-  for (const { recipeName, ingredients } of inputs) {
+  for (const { recipeName, ingredients, scale } of inputs) {
+    const factor = Number.isFinite(scale) && (scale ?? 1) > 0 ? (scale as number) : 1;
     const lines = splitBlock(ingredients);
     for (const line of lines) {
       const parsed = parseIngredientLine(line);
@@ -190,9 +195,10 @@ export function aggregateIngredients(
       if (parsed.amount === null) {
         entry.unparsed.push(line);
       } else {
+        const scaled = parsed.amount * factor;
         const existing = entry.totals.find((t) => t.unit === parsed.unit);
-        if (existing) existing.amount += parsed.amount;
-        else entry.totals.push({ unit: parsed.unit, amount: parsed.amount });
+        if (existing) existing.amount += scaled;
+        else entry.totals.push({ unit: parsed.unit, amount: scaled });
       }
     }
   }
@@ -202,10 +208,10 @@ export function aggregateIngredients(
   );
 }
 
+// Always render amounts as fractions. Falls back to the raw number only when
+// the value isn't representable as a clean fraction in our supported set.
 function formatAmount(n: number): string {
-  if (Number.isInteger(n)) return n.toString();
-  // Keep 2 decimals, drop trailing zeros
-  return n.toFixed(2).replace(/\.?0+$/, "");
+  return formatAsFraction(n);
 }
 
 // Common pantry staples most homes already have. Used to visually
