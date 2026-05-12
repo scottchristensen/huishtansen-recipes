@@ -53,64 +53,56 @@ export default function ScaleControl({ recipeId }: ScaleControlProps) {
   const isCustom = scale !== 1 && !PRESETS.includes(scale);
 
   return (
-    <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg p-3 space-y-3">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-wider font-medium text-slate-500 dark:text-slate-400">
-          Scale
-        </p>
-        <div className="flex flex-wrap items-center gap-1.5">
-          {PRESETS.map((p) => {
-            const active = scale === p;
-            return (
-              <button
-                key={p}
-                type="button"
-                onClick={() => updateScale(p)}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  active
-                    ? "bg-emerald-600 text-white"
-                    : "bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
-                }`}
-              >
-                {formatScaleLabel(p)}
-              </button>
-            );
-          })}
-          <button
-            type="button"
-            onClick={() => setCustomOpen((v) => !v)}
-            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-              isCustom
-                ? "bg-emerald-600 text-white"
-                : "bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
-            }`}
-          >
-            {isCustom ? formatScaleLabel(scale) : "Custom"}
-          </button>
-        </div>
+    <div className="inline-flex flex-col items-end gap-1 relative">
+      <div className="inline-flex items-center rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-0.5">
+        {PRESETS.map((p) => {
+          const active = scale === p;
+          return (
+            <button
+              key={p}
+              type="button"
+              onClick={() => updateScale(p)}
+              className={`px-2 py-0.5 rounded text-xs font-medium transition-colors ${
+                active
+                  ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
+                  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+              }`}
+            >
+              {formatScaleLabel(p)}
+            </button>
+          );
+        })}
+        <button
+          type="button"
+          onClick={() => setCustomOpen((v) => !v)}
+          className={`px-2 py-0.5 rounded text-xs font-medium transition-colors ${
+            isCustom
+              ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
+              : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+          }`}
+        >
+          {isCustom ? formatScaleLabel(scale) : "Custom"}
+        </button>
       </div>
-
       {customOpen && (
         <form
           onSubmit={handleCustomSubmit}
-          className="flex items-center gap-2 pt-1 border-t border-slate-200 dark:border-slate-700"
+          className="absolute top-full right-0 mt-1 z-10 inline-flex items-center gap-1.5 px-2 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm"
         >
-          <label className="text-xs text-slate-600 dark:text-slate-300">
-            Multiply by
-          </label>
+          <span className="text-[11px] text-slate-500 dark:text-slate-400">×</span>
           <input
             type="number"
             step="0.25"
             min="0.1"
             value={customValue}
             onChange={(e) => setCustomValue(e.target.value)}
-            placeholder="e.g. 1.5"
-            className="w-24 px-2 py-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-md text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            placeholder="1.5"
+            className="w-16 px-1.5 py-0.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-emerald-500"
             autoFocus
           />
           <button
             type="submit"
-            className="px-3 py-1 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700"
+            className="px-2 py-0.5 bg-emerald-600 text-white text-xs font-medium rounded hover:bg-emerald-700"
           >
             Apply
           </button>

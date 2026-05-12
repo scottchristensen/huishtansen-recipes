@@ -344,18 +344,18 @@ export default function RecipeDetail() {
 
             {/* Ingredients */}
             <div>
-              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">Ingredients</h2>
+              <div className="flex items-center justify-between gap-3 mb-2">
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Ingredients</h2>
+                {!editing && <ScaleControl recipeId={recipe.id} />}
+              </div>
               {editing ? (
                 <textarea rows={8} value={editForm.ingredients || ""} onChange={(e) => updateEdit("ingredients", e.target.value)} className={inputClasses} />
               ) : (
-                <div className="space-y-3">
-                  <ScaleControl recipeId={recipe.id} />
-                  <ul className="text-slate-700 dark:text-slate-200 text-sm leading-relaxed bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 space-y-1.5 list-disc list-outside pl-8">
-                    {splitIngredientLines(recipe.ingredients).map((line, i) => (
-                      <li key={i}>{scaleIngredientLine(line, scale)}</li>
-                    ))}
-                  </ul>
-                </div>
+                <ul className="text-slate-700 dark:text-slate-200 text-sm leading-relaxed bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 space-y-1.5 list-disc list-outside pl-8">
+                  {splitIngredientLines(recipe.ingredients).map((line, i) => (
+                    <li key={i}>{scaleIngredientLine(line, scale)}</li>
+                  ))}
+                </ul>
               )}
             </div>
 

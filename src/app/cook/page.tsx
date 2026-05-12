@@ -523,13 +523,14 @@ function CookInner() {
           </div>
         )}
 
-        {recipe.id && <ScaleControl recipeId={recipe.id} />}
-
         <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">
           <aside className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-5 h-fit lg:sticky lg:top-4">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-3">
-              Ingredients
-            </h2>
+            <div className="flex items-center justify-between gap-2 mb-3">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                Ingredients
+              </h2>
+              {recipe.id && <ScaleControl recipeId={recipe.id} />}
+            </div>
             <ul className="space-y-2">
               {ingredientLines.map((line, i) => (
                 <IngredientItem key={i} line={line} />
