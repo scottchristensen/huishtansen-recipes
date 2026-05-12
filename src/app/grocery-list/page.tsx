@@ -15,6 +15,7 @@ import {
   GroceryEntry,
   aggregateIngredients,
   formatEntry,
+  isPantryStaple,
 } from "@/lib/grocery";
 import AuthGate from "@/components/AuthGate";
 
@@ -134,6 +135,16 @@ export default function GroceryListPage() {
       })),
     [entries]
   );
+
+  const { toBuy, pantry } = useMemo(() => {
+    const toBuyList: typeof formattedEntries = [];
+    const pantryList: typeof formattedEntries = [];
+    for (const e of formattedEntries) {
+      if (isPantryStaple(e.entry)) pantryList.push(e);
+      else toBuyList.push(e);
+    }
+    return { toBuy: toBuyList, pantry: pantryList };
+  }, [formattedEntries]);
 
   // suggestionMap: original text → Map<Mode, Suggestion>
   const suggestionMap = useMemo(() => {
@@ -344,142 +355,211 @@ export default function GroceryListPage() {
             </a>
           </div>
         ) : (
-          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
-            <div className="grid grid-cols-12 gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700 text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              <div className="col-span-1"></div>
-              <div className={hasAnyMode ? "col-span-4" : "col-span-8"}>
-                Item
-              </div>
-              {hasAnyMode && (
-                <div className="col-span-4">Suggested swaps</div>
-              )}
-              <div className="col-span-3 text-right">Used in</div>
-            </div>
-
-            <ul className="divide-y divide-slate-100 dark:divide-slate-800">
-              {formattedEntries.map(({ entry, formatted }) => {
-                const isChecked = checked.has(entry.key);
-                const swaps = suggestionMap.get(formatted);
-                const appliedMode = appliedByKey.get(entry.key);
-                const itemHasSuggestions =
-                  hasAnyMode &&
-                  Array.from(activeModes).some((m) => swaps?.has(m));
-                return (
-                  <li
-                    key={entry.key}
-                    className={`grid grid-cols-12 gap-2 px-4 py-2.5 items-start transition-colors ${
-                      isChecked ? "opacity-60" : ""
-                    } hover:bg-slate-50 dark:hover:bg-slate-800/40`}
-                  >
-                    <div className="col-span-1 pt-1">
-                      <button
-                        onClick={() => toggleChecked(entry.key)}
-                        className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-                          isChecked
-                            ? "bg-emerald-500 border-emerald-500 text-white"
-                            : "border-slate-300 dark:border-slate-600 hover:border-emerald-400"
-                        }`}
-                        aria-label={isChecked ? "Uncheck" : "Check"}
-                      >
-                        {isChecked && (
-                          <svg
-                            className="w-3 h-3"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={3}
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        )}
-                      </button>
-                    </div>
-                    <div
-                      className={`${hasAnyMode ? "col-span-4" : "col-span-8"} text-sm pt-1 ${
-                        appliedMode
-                          ? "text-slate-400 dark:text-slate-500 line-through"
-                          : "text-slate-800 dark:text-slate-200"
-                      } ${isChecked ? "line-through" : ""}`}
-                    >
-                      {formatted}
-                    </div>
-                    {hasAnyMode && (
-                      <div className="col-span-4 text-sm space-y-1">
-                        {itemHasSuggestions ? (
-                          ALL_MODES.filter((m) => activeModes.has(m)).map(
-                            (m) => {
-                              const sug = swaps?.get(m);
-                              if (!sug) return null;
-                              const meta = MODE_META[m];
-                              const isApplied = appliedMode === m;
-                              return (
-                                <button
-                                  key={m}
-                                  onClick={() => toggleApplied(entry.key, m)}
-                                  className={`w-full text-left rounded-md px-2 py-1.5 transition-colors ${
-                                    isApplied
-                                      ? meta.appliedPill
-                                      : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
-                                  }`}
-                                  title={sug.reason}
-                                >
-                                  <div className="flex items-start gap-1.5">
-                                    <span className={meta.pillText}>
-                                      {meta.icon}
-                                    </span>
-                                    <div className="min-w-0 flex-1">
-                                      <div className="font-medium">
-                                        {sug.alternative}
-                                      </div>
-                                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">
-                                        {sug.reason}
-                                      </div>
-                                    </div>
-                                  </div>
-                                </button>
-                              );
-                            }
-                          )
-                        ) : (
-                          <span className="text-slate-300 dark:text-slate-600 text-xs italic">
-                            (no swap)
-                          </span>
-                        )}
-                      </div>
-                    )}
-                    <div
-                      className="col-span-3 text-xs text-slate-500 dark:text-slate-400 text-right pt-1"
-                      title={entry.recipes.join(", ")}
-                    >
-                      {entry.recipes.length}{" "}
-                      <span className="text-slate-400 dark:text-slate-500">
-                        recipe{entry.recipes.length !== 1 ? "s" : ""}
-                      </span>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-
-            {loadingModes.size > 0 && (
-              <div className="px-4 py-3 border-t border-slate-200 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-emerald-300 border-t-emerald-600 rounded-full animate-spin" />
-                Generating {Array.from(loadingModes).join(" + ")} suggestions…
-              </div>
-            )}
-
-            {hasAnyMode && loadingModes.size === 0 && (
-              <div className="px-4 py-3 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400">
-                Tap a suggestion to apply it. Applied swaps are used when you copy the list.
-              </div>
-            )}
+          <div className="space-y-4">
+          <GrocerySection
+            title="Need to buy"
+            subtitle={`${toBuy.length} item${toBuy.length !== 1 ? "s" : ""}`}
+            rows={toBuy}
+            hasAnyMode={hasAnyMode}
+            activeModes={activeModes}
+            checked={checked}
+            appliedByKey={appliedByKey}
+            suggestionMap={suggestionMap}
+            toggleChecked={toggleChecked}
+            toggleApplied={toggleApplied}
+            loadingModes={loadingModes}
+          />
+          {pantry.length > 0 && (
+            <GrocerySection
+              title="Probably have on hand"
+              subtitle={`${pantry.length} pantry staple${pantry.length !== 1 ? "s" : ""}`}
+              rows={pantry}
+              hasAnyMode={hasAnyMode}
+              activeModes={activeModes}
+              checked={checked}
+              appliedByKey={appliedByKey}
+              suggestionMap={suggestionMap}
+              toggleChecked={toggleChecked}
+              toggleApplied={toggleApplied}
+              loadingModes={loadingModes}
+              dimmed
+            />
+          )}
           </div>
         )}
       </div>
     </AuthGate>
+  );
+}
+
+interface GrocerySectionProps {
+  title: string;
+  subtitle: string;
+  rows: { entry: GroceryEntry; formatted: string }[];
+  hasAnyMode: boolean;
+  activeModes: Set<Mode>;
+  checked: Set<string>;
+  appliedByKey: Map<string, Mode>;
+  suggestionMap: Map<string, Map<Mode, Suggestion>>;
+  toggleChecked: (key: string) => void;
+  toggleApplied: (key: string, mode: Mode) => void;
+  loadingModes: Set<Mode>;
+  dimmed?: boolean;
+}
+
+function GrocerySection({
+  title,
+  subtitle,
+  rows,
+  hasAnyMode,
+  activeModes,
+  checked,
+  appliedByKey,
+  suggestionMap,
+  toggleChecked,
+  toggleApplied,
+  loadingModes,
+  dimmed,
+}: GrocerySectionProps) {
+  if (rows.length === 0) return null;
+  return (
+    <div
+      className={`bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden ${
+        dimmed ? "opacity-80" : ""
+      }`}
+    >
+      <div className="flex items-baseline justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60">
+        <h2
+          className={`text-sm font-semibold ${
+            dimmed
+              ? "text-slate-500 dark:text-slate-400"
+              : "text-slate-900 dark:text-slate-100"
+          }`}
+        >
+          {title}
+        </h2>
+        <span className="text-xs text-slate-500 dark:text-slate-400">{subtitle}</span>
+      </div>
+      <div className="grid grid-cols-12 gap-2 px-4 py-2 border-b border-slate-100 dark:border-slate-800 text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        <div className="col-span-1"></div>
+        <div className={hasAnyMode ? "col-span-4" : "col-span-8"}>Item</div>
+        {hasAnyMode && <div className="col-span-4">Suggested swaps</div>}
+        <div className="col-span-3 text-right">Used in</div>
+      </div>
+      <ul className="divide-y divide-slate-100 dark:divide-slate-800">
+        {rows.map(({ entry, formatted }) => {
+          const isChecked = checked.has(entry.key);
+          const swaps = suggestionMap.get(formatted);
+          const appliedMode = appliedByKey.get(entry.key);
+          const itemHasSuggestions =
+            hasAnyMode && Array.from(activeModes).some((m) => swaps?.has(m));
+          return (
+            <li
+              key={entry.key}
+              className={`grid grid-cols-12 gap-2 px-4 py-2.5 items-start transition-colors ${
+                isChecked ? "opacity-60" : ""
+              } hover:bg-slate-50 dark:hover:bg-slate-800/40`}
+            >
+              <div className="col-span-1 pt-1">
+                <button
+                  onClick={() => toggleChecked(entry.key)}
+                  className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+                    isChecked
+                      ? "bg-emerald-500 border-emerald-500 text-white"
+                      : "border-slate-300 dark:border-slate-600 hover:border-emerald-400"
+                  }`}
+                  aria-label={isChecked ? "Uncheck" : "Check"}
+                >
+                  {isChecked && (
+                    <svg
+                      className="w-3 h-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={3}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  )}
+                </button>
+              </div>
+              <div
+                className={`${hasAnyMode ? "col-span-4" : "col-span-8"} text-sm pt-1 ${
+                  appliedMode
+                    ? "text-slate-400 dark:text-slate-500 line-through"
+                    : dimmed
+                      ? "text-slate-500 dark:text-slate-400"
+                      : "text-slate-800 dark:text-slate-200"
+                } ${isChecked ? "line-through" : ""}`}
+              >
+                {formatted}
+              </div>
+              {hasAnyMode && (
+                <div className="col-span-4 text-sm space-y-1">
+                  {itemHasSuggestions ? (
+                    ALL_MODES.filter((m) => activeModes.has(m)).map((m) => {
+                      const sug = swaps?.get(m);
+                      if (!sug) return null;
+                      const meta = MODE_META[m];
+                      const isApplied = appliedMode === m;
+                      return (
+                        <button
+                          key={m}
+                          onClick={() => toggleApplied(entry.key, m)}
+                          className={`w-full text-left rounded-md px-2 py-1.5 transition-colors ${
+                            isApplied
+                              ? meta.appliedPill
+                              : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+                          }`}
+                          title={sug.reason}
+                        >
+                          <div className="flex items-start gap-1.5">
+                            <span className={meta.pillText}>{meta.icon}</span>
+                            <div className="min-w-0 flex-1">
+                              <div className="font-medium">{sug.alternative}</div>
+                              <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">
+                                {sug.reason}
+                              </div>
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })
+                  ) : (
+                    <span className="text-slate-300 dark:text-slate-600 text-xs italic">
+                      (no swap)
+                    </span>
+                  )}
+                </div>
+              )}
+              <div
+                className="col-span-3 text-xs text-slate-500 dark:text-slate-400 text-right pt-1"
+                title={entry.recipes.join(", ")}
+              >
+                {entry.recipes.length}{" "}
+                <span className="text-slate-400 dark:text-slate-500">
+                  recipe{entry.recipes.length !== 1 ? "s" : ""}
+                </span>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      {loadingModes.size > 0 && (
+        <div className="px-4 py-3 border-t border-slate-200 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2">
+          <div className="w-4 h-4 border-2 border-emerald-300 border-t-emerald-600 rounded-full animate-spin" />
+          Generating {Array.from(loadingModes).join(" + ")} suggestions…
+        </div>
+      )}
+      {hasAnyMode && loadingModes.size === 0 && (
+        <div className="px-4 py-3 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400">
+          Tap a suggestion to apply it. Applied swaps are used when you copy the list.
+        </div>
+      )}
+    </div>
   );
 }

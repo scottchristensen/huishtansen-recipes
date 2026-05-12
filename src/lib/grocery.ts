@@ -191,6 +191,71 @@ function formatAmount(n: number): string {
   return n.toFixed(2).replace(/\.?0+$/, "");
 }
 
+// Common pantry staples most homes already have. Used to visually
+// de-prioritize them on the grocery list so people focus on what they
+// actually need to buy. Match against the normalized key, which is
+// already lowercased and stripped of common descriptors.
+const PANTRY_STAPLES = [
+  "salt",
+  "kosher salt",
+  "sea salt",
+  "pepper",
+  "black pepper",
+  "white pepper",
+  "sugar",
+  "brown sugar",
+  "granulated sugar",
+  "flour",
+  "all purpose flour",
+  "all-purpose flour",
+  "ap flour",
+  "baking soda",
+  "baking powder",
+  "vanilla",
+  "vanilla extract",
+  "olive oil",
+  "canola oil",
+  "vegetable oil",
+  "neutral oil",
+  "cooking spray",
+  "vinegar",
+  "white vinegar",
+  "balsamic vinegar",
+  "apple cider vinegar",
+  "red wine vinegar",
+  "rice vinegar",
+  "soy sauce",
+  "water",
+  "ice water",
+  "cumin",
+  "paprika",
+  "smoked paprika",
+  "oregano",
+  "basil",
+  "thyme",
+  "rosemary",
+  "chili powder",
+  "cayenne",
+  "cayenne pepper",
+  "cinnamon",
+  "ginger powder",
+  "ground ginger",
+  "nutmeg",
+  "bay leaf",
+  "bay leave",
+  "garlic powder",
+  "onion powder",
+  "red pepper flake",
+];
+
+export function isPantryStaple(entry: GroceryEntry): boolean {
+  const key = entry.key.toLowerCase();
+  return PANTRY_STAPLES.some((s) => {
+    if (key === s) return true;
+    return new RegExp(`\\b${s.replace(/\\/g, "\\\\")}\\b`).test(key);
+  });
+}
+
 export function formatEntry(entry: GroceryEntry): string {
   const totalsStr = entry.totals
     .map((t) => (t.unit ? `${formatAmount(t.amount)} ${t.unit}` : formatAmount(t.amount)))
