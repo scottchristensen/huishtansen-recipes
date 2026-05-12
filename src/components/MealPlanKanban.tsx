@@ -9,6 +9,12 @@ import {
   SLOT_ICON,
   SLOT_LABEL,
 } from "@/lib/meal-plan-store";
+import {
+  RECIPE_SCALE_EVENT,
+  getRecipeScale,
+  setRecipeScale,
+} from "@/lib/recipe-scale";
+import { formatScaleLabel } from "@/lib/scaling";
 
 const DRAG_MIME = "application/x-huish-meal-card";
 
@@ -80,6 +86,18 @@ export default function MealPlanKanban({
 }: MealPlanKanbanProps) {
   const [hoverCell, setHoverCell] = useState<string | null>(null);
   const [collapsedDays, setCollapsedDays] = useState<Set<string>>(new Set());
+  const [scalePickerFor, setScalePickerFor] = useState<{
+    recipeId: string;
+    recipeName: string;
+  } | null>(null);
+  const [scaleVersion, setScaleVersion] = useState(0);
+
+  // Bump whenever any recipe's scale changes so chip badges re-render.
+  useEffect(() => {
+    const bump = () => setScaleVersion((v) => v + 1);
+    window.addEventListener(RECIPE_SCALE_EVENT, bump);
+    return () => window.removeEventListener(RECIPE_SCALE_EVENT, bump);
+  }, []);
 
   const toggleCollapsed = (day: string) => {
     setCollapsedDays((prev) => {
@@ -240,6 +258,56 @@ export default function MealPlanKanban({
                   >
                     {recipe.name}
                   </span>
+                  {(() => {
+                    void scaleVersion; // re-read on scale change events
+                    const s = getRecipeScale(id);
+                    if (s === 1) return null;
+                    return (
+                      <button
+                        type="button"
+                        onMouseDown={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setScalePickerFor({
+                            recipeId: id,
+                            recipeName: recipe.name,
+                          });
+                        }}
+                        className="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/60 transition-colors"
+                        title="Adjust scale"
+                      >
+                        {formatScaleLabel(s)}
+                      </button>
+                    );
+                  })()}
+                  <button
+                    type="button"
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setScalePickerFor({
+                        recipeId: id,
+                        recipeName: recipe.name,
+                      });
+                    }}
+                    className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 opacity-0 group-hover:opacity-100 transition-opacity"
+                    aria-label="Scale recipe"
+                    title="Scale recipe"
+                  >
+                    <svg
+                      className="w-3.5 h-3.5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+                      />
+                    </svg>
+                  </button>
                   <a
                     href={`/recipe/${recipe.id}`}
                     draggable={false}
@@ -293,8 +361,17 @@ export default function MealPlanKanban({
     );
   };
 
+  const scaleModal = scalePickerFor ? (
+    <ScalePickerDialog
+      recipeId={scalePickerFor.recipeId}
+      recipeName={scalePickerFor.recipeName}
+      onClose={() => setScalePickerFor(null)}
+    />
+  ) : null;
+
   if (layout === "list") {
     return (
+      <>
       <div className="space-y-3">
         {plan.map((day) => {
           const isCollapsed = collapsedDays.has(day.day);
@@ -350,11 +427,14 @@ export default function MealPlanKanban({
           );
         })}
       </div>
+      {scaleModal}
+      </>
     );
   }
 
   // Kanban layout: horizontal swimlanes
   return (
+    <>
     <div className="overflow-x-auto pb-2">
       <div className="grid grid-flow-col auto-cols-[minmax(180px,1fr)] gap-3 min-w-full">
         {plan.map((day) => (
@@ -376,6 +456,8 @@ export default function MealPlanKanban({
         ))}
       </div>
     </div>
+    {scaleModal}
+    </>
   );
 }
 
@@ -569,6 +651,137 @@ export function SuggestionsTray({ suggestions }: SuggestionsTrayProps) {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+interface ScalePickerDialogProps {
+  recipeId: string;
+  recipeName: string;
+  onClose: () => void;
+}
+
+const SCALE_PRESETS = [0.5, 1, 2];
+
+function ScalePickerDialog({
+  recipeId,
+  recipeName,
+  onClose,
+}: ScalePickerDialogProps) {
+  const [current, setCurrent] = useState<number>(() => getRecipeScale(recipeId));
+  const [customOpen, setCustomOpen] = useState(false);
+  const [customValue, setCustomValue] = useState("");
+
+  const apply = (next: number) => {
+    if (!Number.isFinite(next) || next <= 0) return;
+    setRecipeScale(recipeId, next);
+    setCurrent(next);
+    onClose();
+  };
+
+  const handleCustom = (e: React.FormEvent) => {
+    e.preventDefault();
+    const n = parseFloat(customValue);
+    if (Number.isFinite(n) && n > 0) apply(n);
+  };
+
+  const isCustom = current !== 1 && !SCALE_PRESETS.includes(current);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-5 max-w-sm w-full"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <div className="min-w-0">
+            <p className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Scale
+            </p>
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">
+              {recipeName}
+            </h3>
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 -mr-1"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {SCALE_PRESETS.map((p) => {
+            const active = current === p;
+            return (
+              <button
+                key={p}
+                type="button"
+                onClick={() => apply(p)}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  active
+                    ? "bg-emerald-600 text-white"
+                    : "bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+                }`}
+              >
+                {formatScaleLabel(p)}
+              </button>
+            );
+          })}
+          <button
+            type="button"
+            onClick={() => setCustomOpen((v) => !v)}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+              isCustom
+                ? "bg-emerald-600 text-white"
+                : "bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+            }`}
+          >
+            {isCustom ? formatScaleLabel(current) : "Custom"}
+          </button>
+        </div>
+        {customOpen && (
+          <form
+            onSubmit={handleCustom}
+            className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-700"
+          >
+            <label className="text-xs text-slate-600 dark:text-slate-300">
+              Multiply by
+            </label>
+            <input
+              type="number"
+              step="0.25"
+              min="0.1"
+              value={customValue}
+              onChange={(e) => setCustomValue(e.target.value)}
+              placeholder="e.g. 1.5"
+              className="w-24 px-2 py-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-md text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              autoFocus
+            />
+            <button
+              type="submit"
+              className="px-3 py-1 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700"
+            >
+              Apply
+            </button>
+          </form>
+        )}
+      </div>
     </div>
   );
 }

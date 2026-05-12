@@ -1,11 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  formatAsFraction,
-  formatScaleLabel,
-  parseServings,
-} from "@/lib/scaling";
+import { formatAsFraction, formatScaleLabel } from "@/lib/scaling";
 import {
   RECIPE_SCALE_EVENT,
   getRecipeScale,
@@ -27,9 +23,6 @@ export default function ScaleControl({
   const [hydrated, setHydrated] = useState(false);
   const [customOpen, setCustomOpen] = useState(false);
   const [customValue, setCustomValue] = useState("");
-  const [targetServings, setTargetServings] = useState("");
-
-  const baseServingsNum = parseServings(baseServings);
 
   useEffect(() => {
     setScale(getRecipeScale(recipeId));
@@ -59,22 +52,16 @@ export default function ScaleControl({
     }
   };
 
-  const handleServingsSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!baseServingsNum) return;
-    const target = parseFloat(targetServings);
-    if (!Number.isFinite(target) || target <= 0) return;
-    updateScale(target / baseServingsNum);
-    setTargetServings("");
-  };
-
   if (!hydrated) return null;
 
-  const isCustom =
-    scale !== 1 && !PRESETS.includes(scale);
-  const scaledServings = baseServingsNum
-    ? formatAsFraction(baseServingsNum * scale)
+  const isCustom = scale !== 1 && !PRESETS.includes(scale);
+  const baseServingsNum = baseServings
+    ? parseFloat(baseServings.match(/(\d+(?:\.\d+)?)/)?.[1] || "")
     : null;
+  const scaledServings =
+    baseServingsNum && Number.isFinite(baseServingsNum)
+      ? formatAsFraction(baseServingsNum * scale)
+      : null;
 
   return (
     <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg p-3 space-y-3">
@@ -147,36 +134,6 @@ export default function ScaleControl({
             className="px-3 py-1 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700"
           >
             Apply
-          </button>
-        </form>
-      )}
-
-      {baseServingsNum && (
-        <form
-          onSubmit={handleServingsSubmit}
-          className="flex items-center gap-2 pt-2 border-t border-slate-200 dark:border-slate-700"
-        >
-          <label className="text-xs text-slate-600 dark:text-slate-300">
-            Cooking for
-          </label>
-          <input
-            type="number"
-            step="1"
-            min="1"
-            value={targetServings}
-            onChange={(e) => setTargetServings(e.target.value)}
-            placeholder={String(Math.round(baseServingsNum))}
-            className="w-20 px-2 py-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-md text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          />
-          <span className="text-xs text-slate-500 dark:text-slate-400">
-            people — recipe is for {formatAsFraction(baseServingsNum)}
-          </span>
-          <button
-            type="submit"
-            disabled={!targetServings}
-            className="ml-auto px-3 py-1 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 disabled:opacity-50"
-          >
-            Scale
           </button>
         </form>
       )}
