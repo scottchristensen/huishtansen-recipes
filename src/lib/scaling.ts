@@ -84,11 +84,11 @@ export function formatAsFraction(n: number): string {
 const LEADING_AMOUNT_RE =
   /^(\d+\s+\d+\/\d+|\d+\s*[¼½¾⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞]|\d+\/\d+|\d+(?:\.\d+)?|[¼½¾⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞])\s*/;
 
-// Returns the line with its leading amount multiplied by `factor`. Leaves
-// the rest of the line untouched (including units and item name). If no
-// amount is found, returns the line as-is.
+// Returns the line with its leading amount multiplied by `factor` and
+// rewritten as a fraction (never a decimal). Even at 1× we still rewrite
+// any decimal like "0.5 cup" → "½ cup". Leaves the rest of the line
+// untouched. If no amount is found, returns the line as-is.
 export function scaleIngredientLine(line: string, factor: number): string {
-  if (factor === 1) return line;
   const m = line.match(LEADING_AMOUNT_RE);
   if (!m) return line;
   const amount = parseAmount(m[1]);
