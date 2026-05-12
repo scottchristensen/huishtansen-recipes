@@ -349,7 +349,7 @@ export default function RecipeDetail() {
                 <textarea rows={8} value={editForm.ingredients || ""} onChange={(e) => updateEdit("ingredients", e.target.value)} className={inputClasses} />
               ) : (
                 <div className="space-y-3">
-                  <ScaleControl recipeId={recipe.id} baseServings={recipe.servings} />
+                  <ScaleControl recipeId={recipe.id} />
                   <ul className="text-slate-700 dark:text-slate-200 text-sm leading-relaxed bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 space-y-1.5 list-disc list-outside pl-8">
                     {splitIngredientLines(recipe.ingredients).map((line, i) => (
                       <li key={i}>{scaleIngredientLine(line, scale)}</li>

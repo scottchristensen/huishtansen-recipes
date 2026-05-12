@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { formatAsFraction, formatScaleLabel } from "@/lib/scaling";
+import { formatScaleLabel } from "@/lib/scaling";
 import {
   RECIPE_SCALE_EVENT,
   getRecipeScale,
@@ -10,15 +10,11 @@ import {
 
 interface ScaleControlProps {
   recipeId: string;
-  baseServings?: string;
 }
 
 const PRESETS = [0.5, 1, 2];
 
-export default function ScaleControl({
-  recipeId,
-  baseServings,
-}: ScaleControlProps) {
+export default function ScaleControl({ recipeId }: ScaleControlProps) {
   const [scale, setScale] = useState(1);
   const [hydrated, setHydrated] = useState(false);
   const [customOpen, setCustomOpen] = useState(false);
@@ -55,30 +51,13 @@ export default function ScaleControl({
   if (!hydrated) return null;
 
   const isCustom = scale !== 1 && !PRESETS.includes(scale);
-  const baseServingsNum = baseServings
-    ? parseFloat(baseServings.match(/(\d+(?:\.\d+)?)/)?.[1] || "")
-    : null;
-  const scaledServings =
-    baseServingsNum && Number.isFinite(baseServingsNum)
-      ? formatAsFraction(baseServingsNum * scale)
-      : null;
 
   return (
     <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg p-3 space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-xs uppercase tracking-wider font-medium text-slate-500 dark:text-slate-400">
-            Scale
-          </p>
-          <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-            {formatScaleLabel(scale)}
-            {scaledServings && (
-              <span className="ml-1.5 font-normal text-slate-500 dark:text-slate-400">
-                · serves {scaledServings}
-              </span>
-            )}
-          </p>
-        </div>
+        <p className="text-xs uppercase tracking-wider font-medium text-slate-500 dark:text-slate-400">
+          Scale
+        </p>
         <div className="flex flex-wrap items-center gap-1.5">
           {PRESETS.map((p) => {
             const active = scale === p;
