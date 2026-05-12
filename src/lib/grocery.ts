@@ -128,10 +128,27 @@ function normalizeKey(name: string): string {
     .replace(/s$/, "");
 }
 
+// Split on:
+//   - newlines
+//   - a period followed by another amount or section heading (e.g.
+//     "1 cup berries. Topping: 1/2 cup sugar")
+//   - commas where the next chunk starts with a digit/fraction/capital
+const BLOCK_SPLIT = new RegExp(
+  [
+    String.raw`\n`,
+    String.raw`(?:\.\s+(?=\d|[¼½¾⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞]|[A-Z][a-zA-Z ]{0,40}:))`,
+    String.raw`(?:,\s*(?=\d|[¼½¾⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞]))`,
+    String.raw`(?:,\s*(?=[A-Z]))`,
+  ].join("|"),
+  "g"
+);
+
+const LEADING_SECTION_LABEL_BLOCK = /^[A-Z][a-zA-Z ]{0,40}:\s*/;
+
 function splitBlock(block: string): string[] {
   return block
-    .split(/\n|(?:,\s*(?=\d))|(?:,\s*(?=[A-Z]))/g)
-    .map((l) => l.trim())
+    .split(BLOCK_SPLIT)
+    .map((l) => l.trim().replace(LEADING_SECTION_LABEL_BLOCK, "").trim())
     .filter((l) => l.length > 2);
 }
 
