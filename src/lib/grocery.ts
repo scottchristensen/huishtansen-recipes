@@ -246,6 +246,13 @@ const PANTRY_STAPLES = [
   "garlic powder",
   "onion powder",
   "red pepper flake",
+  "butter",
+  "unsalted butter",
+  "salted butter",
+  "egg",
+  "large egg",
+  "egg yolk",
+  "egg white",
 ];
 
 export function isPantryStaple(entry: GroceryEntry): boolean {

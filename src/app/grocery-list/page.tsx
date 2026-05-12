@@ -261,6 +261,60 @@ export default function GroceryListPage() {
     await navigator.clipboard.writeText(lines.join("\n"));
   };
 
+  const [orderingInstacart, setOrderingInstacart] = useState(false);
+  const [instacartError, setInstacartError] = useState<string | null>(null);
+
+  const handleOrderInstacart = async () => {
+    if (toBuy.length === 0) return;
+    setOrderingInstacart(true);
+    setInstacartError(null);
+    try {
+      // Send only the "Need to buy" items; staples are already on hand.
+      const items = toBuy.map(({ entry, formatted }) => {
+        const appliedMode = appliedByKey.get(entry.key);
+        const display =
+          appliedMode &&
+          (suggestionMap.get(formatted)?.get(appliedMode)?.alternative ||
+            formatted);
+        const total = entry.totals[0];
+        return {
+          name: entry.name,
+          display_text: display || formatted,
+          quantity: total?.amount,
+          unit: total?.unit || "each",
+        };
+      });
+      const res = await fetch("/api/instacart-cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: `Huishtansen Eats — Week of ${weekRange}`,
+          imageUrl:
+            typeof window !== "undefined"
+              ? `${window.location.origin}/opengraph-image`
+              : undefined,
+          linkbackUrl:
+            typeof window !== "undefined"
+              ? `${window.location.origin}/grocery-list`
+              : undefined,
+          items,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.url) {
+        throw new Error(data.error || "Couldn't build the cart");
+      }
+      window.open(data.url, "_blank", "noopener,noreferrer");
+    } catch (e) {
+      setInstacartError(e instanceof Error ? e.message : "Order failed");
+    } finally {
+      setOrderingInstacart(false);
+    }
+  };
+
+  const instacartEnabled =
+    process.env.NEXT_PUBLIC_INSTACART_ENABLED === "true";
+
   if (loading) {
     return (
       <AuthGate>
@@ -285,18 +339,36 @@ export default function GroceryListPage() {
             </p>
           </div>
           {formattedEntries.length > 0 && (
-            <button
-              onClick={handleCopy}
-              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-              title="Copy list"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-              Copy
-            </button>
+            <div className="flex items-center gap-2 shrink-0">
+              {instacartEnabled && toBuy.length > 0 && (
+                <button
+                  onClick={handleOrderInstacart}
+                  disabled={orderingInstacart}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-colors disabled:opacity-60"
+                  title="Send to Instacart"
+                >
+                  <span>🛒</span>
+                  {orderingInstacart ? "Building cart..." : "Order on Instacart"}
+                </button>
+              )}
+              <button
+                onClick={handleCopy}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                title="Copy list"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                Copy
+              </button>
+            </div>
           )}
         </div>
+        {instacartError && (
+          <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-lg px-4 py-3 text-sm text-red-800 dark:text-red-200">
+            {instacartError}
+          </div>
+        )}
 
         <div className="flex flex-wrap items-center gap-2">
           {ALL_MODES.map((m) => {
