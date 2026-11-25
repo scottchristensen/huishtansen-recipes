@@ -8,6 +8,8 @@ difficulty: Medium
 status: family-approved
 tags: [main course, quick, salmon, busy-night]
 kids: ""        # loved / okay / skip
+leftovers: ""   # great / okay / no, for next-day lunch
+season: ""      # any / summer / fall-winter, etc.
 last_made: ""   # YYYY-MM-DD, helps keep weeks varied
 source: https://docs.google.com/document/d/1BnmgXUcbmTkcBR77YT60F5gK97p-m2GH8ajzOO4KU3k/edit
 ---

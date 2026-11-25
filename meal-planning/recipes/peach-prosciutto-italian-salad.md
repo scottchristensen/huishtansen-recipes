@@ -8,6 +8,8 @@ difficulty: Easy
 status: family-approved
 tags: [salad, quick, prosciutto]
 kids: ""        # loved / okay / skip
+leftovers: ""   # great / okay / no, for next-day lunch
+season: ""      # any / summer / fall-winter, etc.
 last_made: ""   # YYYY-MM-DD, helps keep weeks varied
 source: https://docs.google.com/document/d/1xmlp0Ki8AunDxLsPkGWSp-5LTf9Q4Qphp1uWjmNQFzU/edit
 ---

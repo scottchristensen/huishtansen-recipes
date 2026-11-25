@@ -8,6 +8,8 @@ difficulty: Medium
 status: family-approved
 tags: [main course, vegetarian]
 kids: ""        # loved / okay / skip
+leftovers: ""   # great / okay / no, for next-day lunch
+season: ""      # any / summer / fall-winter, etc.
 last_made: ""   # YYYY-MM-DD, helps keep weeks varied
 source: https://docs.google.com/document/d/1cM8Keu1z9itn6IYXCbS68s1q39xF8BFt3LHxlG1r1GU/edit
 ---

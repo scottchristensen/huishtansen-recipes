@@ -8,6 +8,8 @@ difficulty: Easy
 status: family-approved
 tags: [main course, chicken, shrimp]
 kids: ""        # loved / okay / skip
+leftovers: ""   # great / okay / no, for next-day lunch
+season: ""      # any / summer / fall-winter, etc.
 last_made: ""   # YYYY-MM-DD, helps keep weeks varied
 source: https://docs.google.com/document/d/17vtArYzqyo5iBsQAkLpyxDMCa1z67TK0dk4XfyAhaIE/edit
 ---

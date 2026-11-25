@@ -8,6 +8,8 @@ difficulty: Easy
 status: family-approved
 tags: [main course, beef, prep-ahead]
 kids: ""        # loved / okay / skip
+leftovers: ""   # great / okay / no, for next-day lunch
+season: ""      # any / summer / fall-winter, etc.
 last_made: ""   # YYYY-MM-DD, helps keep weeks varied
 source: ""
 ---

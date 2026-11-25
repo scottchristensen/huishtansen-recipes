@@ -18,9 +18,15 @@ A plain-files home for weekly dinner planning, worked through chat with Claude. 
 6. Once you're happy, Claude puts each dinner on the calendar, 5 to 6 PM, named for the meal.
 7. Ordering is a later step and always waits for your yes at checkout.
 
+## Adding a recipe
+
+Send Claude a link, a photo (a cookbook page, a snack package, a plate) or just describe it. Claude asks what it needs to suggest it well later: who loves it, how the kids feel about it, hands-on and total time, whether it's good as leftovers, which meals and seasons it fits. Then it saves a new file in `recipes/` from `recipes/_template.md`.
+
 ## Planning rules
 
 - Plan for 4: two adults, Otto and Cora.
+- Dinners are the anchor, but breakfasts, lunches and snacks can be planned too.
+- We love next-day leftovers for lunch, so cook dinners big enough for two adult lunches unless a recipe says it doesn't keep.
 - Busy night (activity between 4 and 7 PM): 30 minutes or less, slow cooker, or leftovers.
 - No-cook nights (party, dinner out): marked as such, nothing bought.
 - Prefer one big batch that covers a second night.
